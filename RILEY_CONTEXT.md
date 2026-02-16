@@ -1,5 +1,5 @@
 # RILEY_CONTEXT.md
-## Last Updated: 2026-02-15
+## Last Updated: 2026-02-16
 
 > **Purpose**: Source of truth for Riley's projects, preferences, and active work. Read by Claude (lead architect) and available to any AI tool Riley uses.
 
@@ -12,6 +12,8 @@ Entrepreneur, content creator, restaurant operations leader (Chick-fil-A). Build
 **Communication**: Direct, efficient. No excessive formatting. Hashtags over folders. Context over structure. Show don't tell.
 
 **Design eye**: Clean, minimal, non-generic. Gets distracted by formatting options — keep UI stripped down.
+
+**Hardware**: iMac Pro 2018 (3.2 GHz 8-Core Intel Xeon W, 64GB RAM — maxes at Sequoia 15.7.3), MacBook Air (Apple Silicon, latest macOS), iPhone 17 Pro Max, Apple Watch Ultra 3. All non-iMac devices on latest OS.
 
 ---
 
@@ -33,7 +35,7 @@ Piano practice app. Python backend, web frontend.
 Resources: `/Desktop/HarmonyApp/`
 
 **5. AI Operations Monitor** — #conductor #monitor #agents (NEXT BUILD)
-Local agent that watches AI processes on machine, reports costs, flags waste, eventually orchestrates which AI does what. Vision: non-technical conductor for AI workflows.
+Local agent that watches AI processes on machine, reports costs, flags waste, eventually orchestrates which AI does what. Vision: non-technical conductor for AI workflows. Related: ChatGPT "CONTEXT APP" project exploring conductor/concierge agent orchestration.
 
 **6. Dashboard App (RileyHQ)** — #dashboard #productivity
 Command center for all projects. Zero manual maintenance. Design discovery phase.
@@ -69,11 +71,17 @@ RileyFile/
 
 **Claude** (Lead Architect): Claude.ai + Cowork (file ops, terminal commands, builds). Terminal activity is Claude-initiated. Browser automation via Chrome extension — approved domains: github.com, youtube.com, google.com, notion.com, icloud.com, suno.com, chatgpt.com, sider.ai, claude.ai. Can navigate to other AI tools, read their memory/context, and sync back.
 **Sider** (Multi-Model Hub): Browser extension (Plus sub). Quick queries, web research, deep research, model comparison, PDF analysis. Wisebase has Riley Context Hub loaded.
-**ChatGPT**: Brainstorming, ideation, long-form content, daily AI briefs. 80+ saved memories. /context command reads GitHub gist.
-**Gemini**: Google ecosystem, search, research. /context command reads GitHub gist.
+**ChatGPT** (Plus): Brainstorming, ideation, long-form content, daily AI briefs. 80+ saved memories. Custom GPTs: Visual Guides, Question Crafter, Head of AI Development, Whimsical Diagrams. CONTEXT APP project active. /sync command triggers context pull.
+**Gemini**: Google ecosystem, search, research.
 
-**Sync Protocol**: Claude reads GPT memory + Sider Wisebase via browser, updates RileyFile, pushes to GitHub gist. All AI tools reference projects by #hashtag.
-**GitHub**: username rileyfied. Login: Sign in with Apple.
+**Sync Protocol**: All AI tools read RILEY_CONTEXT.md from this GitHub repo:
+- **Repo**: `https://github.com/rileyfied/rileyfile`
+- **Raw URL**: `https://raw.githubusercontent.com/rileyfied/rileyfile/main/RILEY_CONTEXT.md`
+- Claude reads GPT memory + Sider Wisebase via browser, updates RileyFile, pushes to GitHub repo.
+- All AI tools reference projects by #hashtag.
+- ⚠️ **Note**: Previous references to "GitHub gist" were incorrect — this is a GitHub **repo**, not a gist. Update any saved /context commands in ChatGPT/Gemini to use the raw URL above.
+
+**GitHub**: username rileyfied. Login: Sign in with Apple. Email: rileygcolley@icloud.com (HideMyEmail relay: 4m9h2htxjs@privaterelay.appleid.com).
 
 ---
 
@@ -93,12 +101,18 @@ Minimal > Feature-rich. Speed > Perfection. Context > Structure. Cross-platform 
 
 ## ACTIVITY LOG
 
+### 2026-02-16
+- **GPT sync**: Scanned ChatGPT threads — no new project-critical updates since 02-15. GPT had already self-synced earlier today. Confirmed custom GPTs: Visual Guides, Question Crafter, Head of AI Development, Video AI by invideo, Whimsical Diagrams. CONTEXT APP project active with conductor/concierge agent threads.
+- **404 fix**: Corrected sync protocol — was referencing "GitHub gist" but file lives in GitHub repo (`rileyfied/rileyfile`). Updated all references to correct raw URL. Any cached gist URLs in ChatGPT/Gemini /context commands need manual update.
+- **Hardware added**: Device inventory added to WHO IS RILEY section.
+- **config.json**: Verified — no stale gist references. Paths and project definitions current.
+
 ### 2026-02-15
 - **Boil Out**: Nuked OpenClaw (config, binary, credentials, completions). Removed Codex. Stripped agent personality files from RileyFile. Cleaned exposed API keys from .zshrc. Clean slate.
 - **AI Operations Monitor spec complete**: Tracks spend on Claude.ai, Sider, ChatGPT, Gemini. iPhone widget + Mac app. Phased: Monitor → Flag → Execute. PWA prototype first, native if it sticks. Budget: $20+/mo if it delivers.
 - **Key decisions**: Focus on credit/token bank tracking (not flat-rate subs). No terminal tools day-to-day. Monitor before automate.
 - **Cross-platform browser automation**: Claude Chrome extension configured with approved domains. Can SSO via Apple passkey. Tested on GitHub (logged in as rileyfied), ChatGPT, Sider, YouTube, Google, Notion, iCloud, Suno.
-- **Multi-agent context sync**: Claude can now read GPT saved memories (80+), Sider Wisebase, and update RileyFile + GitHub gist to keep all agents in sync.
+- **Multi-agent context sync**: Claude can now read GPT saved memories (80+), Sider Wisebase, and update RileyFile + GitHub repo to keep all agents in sync.
 - **Pending**: Rotate Anthropic API key at console.anthropic.com (2 keys exposed, removed from machine).
 
 ### 2026-02-14
@@ -112,4 +126,4 @@ Minimal > Feature-rich. Speed > Perfection. Context > Structure. Cross-platform 
 
 ---
 
-*Maintained by Claude. Updated 2026-02-15.*
+*Maintained by Claude. Updated 2026-02-16.*
