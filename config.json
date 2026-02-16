@@ -1,0 +1,70 @@
+{
+  "name": "RileyFile",
+  "version": "3.0.0",
+  "description": "Riley's project workspace and capture system",
+  "created": "2026-01-23",
+  "updated": "2026-02-15",
+
+  "paths": {
+    "root": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile",
+    "share": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile/RileyShare",
+    "notes": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile/RileyNotes",
+    "projects": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile/RileyProjects",
+    "agents": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile/RileyAgents",
+    "captures": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile/RileyShare/captures",
+    "app": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile/app"
+  },
+
+  "known_projects": [
+    {
+      "id": "youtube",
+      "name": "YouTube Channel",
+      "keywords": ["youtube", "video", "content", "ai tools", "tutorial"],
+      "path": "RileyProjects/YOUTUBE CHANNEL"
+    },
+    {
+      "id": "armor",
+      "name": "Armor App",
+      "keywords": ["armor", "fighter verses", "scripture", "memorization", "bible"],
+      "path": "RileyProjects/ARMOR APP"
+    },
+    {
+      "id": "conductor",
+      "name": "AI Operations Monitor",
+      "keywords": ["conductor", "monitor", "agents", "tokens", "orchestrator"],
+      "path": "RileyProjects/AI MONITOR"
+    },
+    {
+      "id": "dashboard",
+      "name": "Dashboard App",
+      "keywords": ["dashboard", "productivity", "command center"],
+      "path": "RileyProjects/DASHBOARD APP"
+    },
+    {
+      "id": "harmony",
+      "name": "HarmonyHelper",
+      "keywords": ["harmony", "piano", "music", "practice", "chords"],
+      "path": "/Users/rileycolleyFW/Desktop/HarmonyApp"
+    },
+    {
+      "id": "cfa",
+      "name": "CFA Training",
+      "keywords": ["cfa", "chick-fil-a", "restaurant", "training"],
+      "path": "RileyProjects/CFA TRAINING"
+    }
+  ],
+
+  "file_routing_rules": {
+    "to_notes": {
+      "triggers": ["from RileyNotes app", "contains #hashtag"],
+      "destination": "RileyNotes"
+    },
+    "to_projects": {
+      "triggers": ["matches project keywords"],
+      "destination": "RileyProjects/{matched_project}"
+    },
+    "default": {
+      "destination": "RileyShare"
+    }
+  }
+}
