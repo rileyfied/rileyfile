@@ -1,70 +1,186 @@
 {
   "name": "RileyFile",
-  "version": "3.0.0",
-  "description": "Riley's project workspace and capture system",
+  "version": "2.1.0",
+  "description": "Riley's unified AI context and project management system",
   "created": "2026-01-23",
-  "updated": "2026-02-15",
+  "last_updated": "2026-02-21",
 
   "paths": {
     "root": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile",
-    "share": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile/RileyShare",
-    "notes": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile/RileyNotes",
-    "projects": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile/RileyProjects",
-    "agents": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile/RileyAgents",
+    "rileyshare": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile/RileyShare",
     "captures": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile/RileyShare/captures",
-    "app": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile/app"
+    "rileynotes": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile/RileyNotes",
+    "rileyprojects": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile/RileyProjects",
+    "rileyagents": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile/RileyAgents",
+    "ai_briefs": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile/AI BRIEFS",
+    "app": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile/app",
+    "scripts": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile/scripts",
+    "setup": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile/setup"
+  },
+
+  "github": {
+    "username": "rileyfied",
+    "repo": "rileyfied/rileyfile",
+    "raw_url": "https://raw.githubusercontent.com/rileyfied/rileyfile/main/RILEY_CONTEXT.md",
+    "pages_site": "rileyfied.github.io",
+    "esv_lookup": "https://rileyfied.github.io/esv-lookup/"
   },
 
   "known_projects": [
     {
       "id": "youtube",
       "name": "YouTube Channel",
-      "keywords": ["youtube", "video", "content", "ai tools", "tutorial"],
-      "path": "RileyProjects/YOUTUBE CHANNEL"
+      "description": "AI tools for non-technical frontline managers. Teaching agent delegation vs chatbot prompting.",
+      "keywords": ["youtube", "video", "content", "ai tools", "tutorial", "channel", "filming"],
+      "status": "active_priority",
+      "path": "RileyFile/RileyProjects/YOUTUBE CHANNEL"
+    },
+    {
+      "id": "aibrief",
+      "name": "Daily AI Audio Brief",
+      "description": "15-20 min solo-narration AI news briefings for NotebookLM ingestion",
+      "keywords": ["aibrief", "audio", "news", "notebooklm", "brief", "daily"],
+      "status": "active_ongoing",
+      "path": "RileyFile/AI BRIEFS"
     },
     {
       "id": "armor",
       "name": "Armor App",
-      "keywords": ["armor", "fighter verses", "scripture", "memorization", "bible"],
-      "path": "RileyProjects/ARMOR APP"
+      "description": "Scripture memorization with gamified 5-mechanic ladder and Fighter Verses",
+      "keywords": ["armor", "fighter verses", "scripture", "memorization", "bible", "verse"],
+      "status": "blueprint_complete",
+      "path": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/ARMOR APP"
     },
     {
-      "id": "conductor",
-      "name": "AI Operations Monitor",
-      "keywords": ["conductor", "monitor", "agents", "tokens", "orchestrator"],
-      "path": "RileyProjects/AI MONITOR"
-    },
-    {
-      "id": "dashboard",
-      "name": "Dashboard App",
-      "keywords": ["dashboard", "productivity", "command center"],
-      "path": "RileyProjects/DASHBOARD APP"
+      "id": "skillsdrills",
+      "name": "Skills & Drills App",
+      "description": "Manager training platform with drill creation, distribution, and analytics",
+      "keywords": ["skillsdrills", "training", "managers", "education", "drills", "quiz"],
+      "status": "early_spec"
     },
     {
       "id": "harmony",
       "name": "HarmonyHelper",
-      "keywords": ["harmony", "piano", "music", "practice", "chords"],
+      "description": "Piano practice and music learning app",
+      "keywords": ["harmony", "piano", "music", "practice", "chords", "scales"],
+      "status": "paused",
       "path": "/Users/rileycolleyFW/Desktop/HarmonyApp"
     },
     {
+      "id": "monitor",
+      "name": "AI Operations Monitor",
+      "description": "iPhone widget + Mac app to watch AI tool usage across Claude, Sider, ChatGPT, Gemini",
+      "keywords": ["monitor", "aiops", "dashboard", "widget", "usage", "tokens"],
+      "status": "design_spec_complete"
+    },
+    {
+      "id": "dashboard",
+      "name": "Command Center Dashboard",
+      "description": "Productivity dashboard with live AI news feeds and project status",
+      "keywords": ["dashboard", "commandcenter", "news", "productivity"],
+      "status": "deployed",
+      "path": "RileyFile/RileyProjects/DASHBOARD APP"
+    },
+    {
+      "id": "virtualman",
+      "name": "Virtual Restaurant Manager",
+      "description": "AI knowledge base for restaurant operations - every person who knows anything, on call",
+      "keywords": ["virtualman", "visor", "cfa", "restaurant", "operations", "manager"],
+      "status": "concept"
+    },
+    {
+      "id": "esv",
+      "name": "ESV Lookup",
+      "description": "Bible reference and word search PWA",
+      "keywords": ["esv", "bible", "lookup", "scripture", "search"],
+      "status": "shipped",
+      "url": "https://rileyfied.github.io/esv-lookup/",
+      "path": "RileyFile/bible-lookup.html"
+    },
+    {
       "id": "cfa",
-      "name": "CFA Training",
-      "keywords": ["cfa", "chick-fil-a", "restaurant", "training"],
-      "path": "RileyProjects/CFA TRAINING"
+      "name": "Chick-fil-A Work",
+      "description": "Restaurant operations, training, leadership",
+      "keywords": ["cfa", "chick-fil-a", "restaurant", "training", "operations", "leadership"],
+      "path": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/CFA"
     }
   ],
 
-  "file_routing_rules": {
-    "to_notes": {
-      "triggers": ["from RileyNotes app", "contains #hashtag"],
-      "destination": "RileyNotes"
+  "file_routing": {
+    "rules": [
+      {"pattern": "hashtags_present", "destination": "RileyNotes", "note": "Files with #hashtags route to RileyNotes"},
+      {"pattern": "project_keyword_match", "destination": "RileyProjects/{project}", "note": "Files matching project keywords route to project folder"},
+      {"pattern": "capture_shortcut", "destination": "RileyShare/captures", "note": "iOS shortcut captures land here"},
+      {"pattern": "untagged_default", "destination": "RileyShare", "note": "Everything else stays in RileyShare for Claude to organize"}
+    ],
+    "naming_convention": "aiBrief_ThursFeb12 format for briefs. Captures: capture-YYYY-MM-DD-HHMMSS.txt"
+  },
+
+  "context_categories": {
+    "reference": {"description": "Factual reference or documentation", "examples": ["tutorials", "guides", "docs"]},
+    "inspiration": {"description": "Style, aesthetic, or creative inspiration", "examples": ["design inspo", "video style"]},
+    "idea": {"description": "Original thoughts, concepts, possibilities", "examples": ["app ideas", "video topics"]},
+    "resource": {"description": "Tools, links, or assets", "examples": ["tools", "templates", "libraries"]},
+    "quote": {"description": "Notable quotes, insights, wisdom", "examples": ["leadership", "scripture", "AI insights"]},
+    "task": {"description": "Action items or reminders", "examples": ["todo", "reminder", "follow-up"]}
+  },
+
+  "riley_context": {
+    "preferences": {
+      "design": "Clean, minimal, non-generic. Discerning aesthetic eye. Better Notes style UI.",
+      "formatting": "No excessive bullets/indents. Hashtags over folders. Context over structure.",
+      "workflow": "Multi-channel dumper. Speed over organization at capture. AI organizes later.",
+      "hardware": "iMac (Xeon W, Sequoia 15.7.3 max), MacBook Air, iPhone 17 Pro Max, Apple Watch Ultra 3"
     },
-    "to_projects": {
-      "triggers": ["matches project keywords"],
-      "destination": "RileyProjects/{matched_project}"
+    "projects_active": ["youtube", "aibrief", "armor", "skillsdrills", "harmony", "monitor", "dashboard", "virtualman", "esv"],
+    "communication_style": "Direct, efficient. Task execution over conversation. No filler, no praise, no health advice.",
+    "priority_90day": "YouTube channel launch — ship content to external audiences before building more tools."
+  },
+
+  "ai_team": {
+    "claude": {
+      "role": "Lead Architect",
+      "interface": "Claude.ai projects, Cowork (file ops/terminal)",
+      "specialties": ["RileyFile maintenance", "file operations", "system architecture", "code", "builds"],
+      "note": "All terminal activity is Claude-initiated via Cowork. Riley does not use terminal directly."
     },
-    "default": {
-      "destination": "RileyShare"
+    "sider": {
+      "role": "Multi-Model Hub",
+      "interface": "Browser extension, sider.ai web",
+      "subscription": "Plus (resets monthly)",
+      "models_available": {
+        "basic_unlimited": ["Sider Fusion", "GPT-5 mini", "Claude Haiku 4.5", "Gemini 2.5 Flash", "Qwen3-Max"],
+        "advanced_unlimited": ["GPT-5.2", "Gemini 3 Pro", "Claude Sonnet 4.5", "Claude Sonnet 4", "Grok 4", "DeepSeek v3.2"],
+        "elite_credits": ["Deep Research", "Scholar Research", "Web Creator", "AI Slides"]
+      },
+      "specialties": ["browser sidebar queries", "web content clipping", "PDF analysis", "model comparison", "deep research"],
+      "wisebase": {
+        "collection": "Riley Context Hub",
+        "notes": ["RILEY_CONTEXT", "ARMOR_APP_SPEC"],
+        "instructions_enabled": true
+      },
+      "onboarding_status": "complete"
+    },
+    "chatgpt": {
+      "role": "Ideation Partner",
+      "interface": "ChatGPT web/app (Plus subscription)",
+      "specialties": ["brainstorming", "long-form content", "alternative perspectives"],
+      "context_sync": "Reads RILEY_CONTEXT.md from GitHub raw URL on /context command"
+    },
+    "gemini": {
+      "role": "Google Integration",
+      "interface": "Gemini web/app, AI Studio",
+      "specialties": ["Google ecosystem", "search", "research"],
+      "context_sync": "Reads RILEY_CONTEXT.md from GitHub raw URL on /context command"
     }
+  },
+
+  "security": {
+    "api_keys": {
+      "anthropic": "ClaudeAPI_v6 active at console.anthropic.com. Not currently used anywhere.",
+      "esv": "Active, used in ESV Lookup PWA",
+      "note": "Keys rotated 2026-02-15. Old v1-v5 deleted. .zshrc and .openclaw/.env both cleared."
+    },
+    "openclaw": "Nuked 2026-02-15. Fully reset."
   }
 }
