@@ -1,229 +1,113 @@
 # RILEY_CONTEXT.md
-## Last Updated: 2026-02-16
 
-> **Purpose**: Source of truth for Riley's projects, preferences, and active work. Read by Claude (lead architect) and available to any AI tool Riley uses.
+## Unified AI Context File | Last Updated: 2026-02-20
 
----
-
-## WHO IS RILEY# RILEY_CONTEXT.md
-
-## Unified AI Context File | Last Updated: 2026-02-17
-
-> This file is the source of truth for all AI tools working with Riley.
+> Source of truth for all AI tools working with Riley.
 > Maintained by Claude (Lead AI Architect). Hosted at github.com/rileyfied/rileyfile.
-> When Riley says “/context” — read this file and confirm with “Context loaded ✓”
+> When Riley says “/context” or “/rf” — read this file and confirm “Context loaded ✓”
 
 -----
 
 ## WHO IS RILEY
 
-Entrepreneur, content creator, restaurant operations leader (Chick-fil-A). Building in the AI space while working full-time. “Multi-channel dumper” — captures ideas across texts, voice memos, screenshots, AI chats, playlists. Strong bias toward speed over organization at capture time.
+Entrepreneur, content creator, restaurant operations leader (Chick-fil-A). Building in the AI space full-time nights/weekends. “Multi-channel dumper” — captures ideas across texts, voice memos, screenshots, AI chats, playlists. Strong bias toward speed over organization at capture time; systematic organization happens later through AI assistance.
 
-**Communication**: Direct, efficient. No excessive formatting. Hashtags over folders. Context over structure. Show don’t tell.
+**Communication**: Direct, efficient. Task execution over conversation. No excessive formatting, praise, or filler. Hashtags over folders. Context over structure.
 
-**Design eye**: Clean, minimal, non-generic. Gets distracted by formatting options — keep UI stripped down.
+**Design eye**: Clean, minimal, non-generic. Discerning aesthetic sense. Gets distracted by formatting options — keep UI stripped down. Better Notes style: minimal UI, no formatting toolbars.
 
-**What NOT to do**: Don’t over-format. Don’t create complex folder hierarchies. Don’t add bells/whistles to tools. Don’t assume — ask when context is ambiguous. Don’t give health/sleep advice.
+**What NOT to do**: Don’t over-format with bullets/indents. Don’t create complex folder hierarchies. Don’t add bells/whistles. Don’t assume — ask when context is ambiguous. Don’t give health/sleep/time-of-day advice. Don’t tell Riley to go to bed.
+
+**Hardware**: iMac (3.2 GHz 8-Core Intel Xeon W, maxed at Sequoia 15.7.3), MacBook Air, iPhone 17 Pro Max, Apple Watch Ultra 3. All Apple ecosystem.
 
 -----
 
 ## ACTIVE PROJECTS (Priority Order)
 
-**1. YouTube Channel** — #youtube #video #ai #tutorial
-AI tools for non-technical audiences. First video: “You’re Using AI Wrong.” Target: frontline operational managers, not enterprise knowledge workers. Teaching delegation to AI agents, not basic chatbot prompting. Style refs: Nate B. Jones, Fireship, Igor Pogany.
-Status: Video #1 ready to film.
-Resources: `RileyFile/RileyProjects/YOUTUBE CHANNEL`
+### 1. YouTube Channel — #youtube #video #ai #tutorial
 
-**2. Daily AI Audio Brief** — #aibrief #audio #news
-15-20 min solo-narration briefings on breaking AI news. Sources: The Rundown AI, Ben’s Bites, TechCrunch AI, arXiv, X/Reddit. Spotlight triggers: major AI figures, viral posts.
-Status: Ongoing production.
+AI tools for non-technical audiences. Target: frontline operational managers who don’t know what they’d use AI for. Teaching delegation to AI agents, not basic chatbot prompting. Market differentiation: agents vs chatbots, process/systems architecture over LLM chat threads.
+**First video**: “You’re Using AI Wrong” — ready to film.
+**Style refs**: Nate B. Jones, Fireship, Aleric Heck (shorts standard), Igor Pogany.
+**Practice**: Camera presence training with read-aloud transcripts for self-critique (visual presence, vocal delivery, articulation/pauses).
+**Status**: Video #1 ready to film. 90-day value capture priority.
+**Path**: `RileyFile/RileyProjects/YOUTUBE CHANNEL`
 
-**3. Armor App** — #armor #scripture #bible #fighterverses
-Scripture memorization with gamified 5-mechanic ladder: Word Bank → Word Scramble → Type 1st Letter → Type Full Word → Recite Out Loud. Each mechanic has L1-L5 levels with strict gating (linear progression). Fighter Verses data sets A-E ready. Full IA blueprint exists. Brand: deep red (#C41E3A) + white, shield/armor theme. Hamburger menu nav, no bottom tab bar.
-Status: Blueprint ready, development paused.
-Resources: `RileyFile/RileyProjects/ARMOR APP`
+### 2. Daily AI Audio Brief — #aibrief #audio #news
 
-**4. HarmonyHelper** — #harmony #piano #music #chords
-Piano practice and music learning app. Python backend, web frontend.
-Status: Active development.
-Resources: `/Desktop/HarmonyApp/`
+15-20 min solo-narration briefings on breaking AI news. NotebookLM-style delivery. Sources: The Rundown AI, Ben’s Bites, TechCrunch AI, VentureBeat, arXiv, X/Reddit, Hacker News.
+**Naming convention**: `aiBrief_ThursFeb12` format (short day + month + date).
+**Output**: Copy/paste-friendly block for NotebookLM ingestion.
+**Status**: Ongoing production.
+**Path**: `RileyFile/AI BRIEFS/`
 
-**5. AI Operations Monitor** — #conductor #monitor #agents
-Local agent that watches AI processes on machine, reports costs, flags waste, eventually orchestrates which AI does what. Vision: non-technical conductor for AI workflows. iPhone widget + Mac app, PWA prototype first.
-Status: Design phase (NEXT BUILD).
+### 3. Armor App — #armor #scripture #bible #fighterverses
 
-**6. Dashboard App (RileyHQ)** — #dashboard #productivity
-Command center for all projects. Zero manual maintenance, proactive insights. Auto-refreshes, fetches live AI news, reads project status from JSON.
-Status: Design discovery phase.
+Scripture memorization with gamified 5-mechanic ladder:
+
+1. Word Bank — tap words from pool to assemble verse in order
+1. Word Scramble — drag scrambled words into correct sequence
+1. Type First Letter — type the first letter of each word
+1. Type Full Word — type each word with first letter shown
+1. Recite Out Loud — voice recording + self-grade
+
+Each mechanic has L1-L5 levels. **Strict gating**: linear progression, cannot start Mechanic 2 until Mechanic 1 L5 passed. Levels linear within mechanic.
+**Brand**: Deep red (#C41E3A) + white (#FFFFFF), accent blue (#3B82F6). Shield/armor theme.
+**UI**: Hamburger menu (top-right), no bottom tab bar. 5-segment progress bar per mechanic family. Active Verse card: Eyebrow (Week X - Reference), Verse text, Footer reference.
+**Data**: Fighter Verses Sets A-E ready (ArmorApp_SetReferenceTable.csv). Pop quizzes for spaced repetition.
+**Full IA blueprint**: `Armour_GPT_InfoArchBlueprint_v1.rtf` — frozen wireframe spec.
+**Status**: Blueprint complete, development paused pending YouTube launch.
+**Path**: iCloud Drive/ARMOR APP/
+
+### 4. Skills & Drills App — #skillsdrills #training #managers #education
+
+Education/learning platform for managers and operators. Skills and drills creation, distribution, and tracking tool.
+**Drill types**: Multiple choice, fill-in-blank, true/false, timed rounds, scenario-based, photo/video-based, sequencing.
+**Distribution**: Text invites, QR codes, share links, manual entry.
+**Analytics**: Individual scores, team leaderboards, completion rates, weak areas, exportable reports. Drill template sharing between managers.
+**Design**: System-preference appearance, bottom tab bar (Instagram/Spotify style), clean minimalism + warm approachability.
+**Status**: Early specification phase. Blueprint questionnaire in progress.
+
+### 5. HarmonyHelper — #harmony #piano #music #chords
+
+Piano practice and music learning app.
+**Status**: Active development, paused for YouTube priority.
+**Path**: Desktop/HarmonyApp
+
+### 6. AI Operations Monitor — #monitor #aiops #dashboard
+
+iPhone widget + Mac app combo. Watches Claude.ai, Sider, ChatGPT, Gemini usage. Monitor → flag → suggest → execute on approval. Tracks token/credit banks. Eventually orchestrates which AI does what automatically. Terminal activity = Claude-initiated via Cowork.
+**Status**: Design spec complete, next build after YouTube.
+
+### 7. Command Center Dashboard — #dashboard #commandcenter
+
+Productivity dashboard with live AI news feeds, project status, Claude suggestions. Auto-refreshes every 5 minutes. Deployed and functional.
+**News sources**: The Rundown AI, Ben’s Bites, TechCrunch, VentureBeat, arXiv, X, Reddit, Hacker News.
+**Status**: Deployed, functional. Maintenance mode.
+
+### 8. Virtual Restaurant Manager — #virtualman #visor #cfa
+
+AI knowledge base for restaurant operations. Every person who knows anything at a restaurant, available on a “zoom call” waiting for questions. 3-year idea. Addresses the reality of manager chaos (callouts, broken equipment, training gaps, vendor issues) with an AI that holds all institutional knowledge.
+**Status**: Concept/idea stage.
+
+### 9. ESV Lookup — #esv #bible #tool
+
+PWA with dark mode, reference search, word search. Live at rileyfied.github.io/esv-lookup/.
+**Status**: Shipped. Maintenance only.
 
 -----
 
-## RILEYFILE STRUCTURE
+## RIILEYFILE SYSTEM (Infrastructure)
+
+### Folder Structure
 
 ```
-RileyFile/                        (iCloud Drive)
-├── RILEY_CONTEXT.md              ← This file (synced to GitHub)
-├── MEMORY.md                     ← Curated long-term context
-├── INDEX.md                      ← Navigation guide
-├── config.json                   ← Project definitions, routing rules
-├── RileyShare/                   ← Default landing zone for all files
-│   └── captures/                 ← iOS Shortcut captures, bookmarks
-├── RileyNotes/                   ← Notes with #hashtags
-├── RileyProjects/                ← Active project folders
-│   ├── ARMOR APP/
-│   ├── YOUTUBE CHANNEL/
-│   ├── DASHBOARD APP/
-│   ├── CFA TRAINING/
-│   └── RILEY API/
-├── RileyAgents/                  ← AI memory archives
-│   ├── CLAUDE MEMORY ARCHIVE/
-│   ├── ChatGPT MEMORY ARCHIVE/
-│   └── GROK MEMORY ARCHIVE/
-├── AI BRIEFS/                    ← Daily audio brief production
-│   ├── AUDIO OVERVIEWS/
-│   └── DESCRIPT/
-├── app/                          ← RileyNotes PWA
-└── scripts/                      ← Automation scripts
-```
-
-**File routing**: Unsaved files → RileyShare. Files with #hashtags → RileyNotes. Files matching project keywords → RileyProjects/{project}.
-
------
-
-## DESIGN THINKING (Apply to Every Build)
-
-1. **Empathize**: Fast/messy capture is intentional. Organization should be invisible.
-1. **Define**: What friction is this solving? Ask before building.
-1. **Ideate**: Present options, not just solutions. Match minimal aesthetic. Consider cross-platform (iPhone, iPad, Mac).
-1. **Prototype**: Functional over beautiful. Artifacts/demos over documentation.
-1. **Test**: Real usage reveals true needs. Watch for “this is close but…” feedback. Adjust fast, don’t defend design decisions.
-
------
-
-## DECISION PRINCIPLES
-
-1. Minimal > Feature-rich
-1. Speed > Perfection
-1. Context > Structure
-1. Cross-platform > Single-platform
-1. Invisible organization (auto-tag, auto-categorize, don’t ask user)
-
------
-
-## AI TEAM
-
-**Claude** = Lead Architect. Maintains context files, builds apps, manages RileyFile system. All terminal/file ops go through Claude via Cowork. Updates this file and pushes to GitHub.
-
-**ChatGPT** = Brainstorming, ideation, long-form content, alternative perspectives.
-
-**Gemini** = Google ecosystem integration, search, research, NotebookLM audio overviews.
-
-**Sider** = Multi-Model Hub. Browser sidebar queries, web research, PDF analysis, model comparison. Has Wisebase with project context (“Riley Context Hub” collection). Plus subscription (resets monthly). Access to Claude Sonnet 4.5, GPT-5.2, Gemini 3 Pro, Grok 4, DeepSeek.
-
-### Context Sync Protocol
-
-- iCloud Drive copy is primary source of truth
-- GitHub repo (github.com/rileyfied/rileyfile) hosts the public sync copy
-- When Riley says `/context`, `/rf`, `/sync`, or `/RileyFile` → agents read from GitHub raw URL
-- Claude pushes updates to GitHub whenever iCloud copy changes
-- Raw URL: `https://raw.githubusercontent.com/rileyfied/rileyfile/main/RILEY_CONTEXT.md`
-
------
-
-## HASHTAG STRATEGY
-
-Active tags: #youtube #videoidea #ai #strategy #armor #scripture #cfa #training #rileyfile #aibrief #conductor #harmony #dashboard
-
------
-
-## KEY INTERESTS & MISSION
-
-- Democratize AI for non-technical audiences
-- Pioneer tools for frontline operational managers (embodied work, real-time problem-solving)
-- Transition people from “LLM chat thread” mode → “process and systems architecture” mode
-- Psychology of human-AI interaction
-- Streamline middle-management duties with AI
-- Music production (Suno for demos), piano learning
-
------
-
-## LESSONS LEARNED
-
-- OpenClaw consumed tokens overnight with no monitoring. Local agents need spending limits, single-model configs, and monitoring before deployment. (2026-02-15)
-- API keys should never be hardcoded in shell configs. ClaudeAPI_v6 is current key (console.anthropic.com). (2026-02-15)
-- Agent personality files (SOUL.md etc.) add overhead without clear ROI. (2026-02-15)
-- Build the monitor BEFORE deploying more agents. (2026-02-15)
-- Context Hub/RileyFile is infrastructure, not a product. Ship value to external audiences. YouTube is the priority. (2026-02-01)
-- Sider Wisebase needs actual file/note content, not just instructions, to reference project specs. (2026-01-27)
-
------
-
-## SYSTEM & HARDWARE
-
-- Apple ecosystem: iMac (Intel Xeon, Sequoia 15.7.3 max), MacBook Air, iPhone 17 Pro Max, Apple Watch Ultra 3
-- iMac won’t update past Sequoia 15.7.3 (not Apple Silicon)
-- All other devices on latest OS
-- GitHub: rileyfied (Apple login)
-- Live tools: rileyfied.github.io/esv-lookup/ (ESV Bible PWA)
-
------
-
-## CURRENT PRIORITIES (Feb 2026)
-
-1. YouTube Channel — Video #1 ready to film
-1. Daily AI Brief — Ongoing production
-1. AI Operations Monitor — Design phase (next build)
-1. Armor App — Blueprint ready, development paused
-
------
-
-*Last updated: 2026-02-17*
-
-Entrepreneur, content creator, restaurant operations leader (Chick-fil-A). Building in the AI space while working full-time. "Multi-channel dumper" — captures ideas across texts, voice memos, screenshots, AI chats, playlists. Strong bias toward speed over organization at capture time.
-
-**Communication**: Direct, efficient. No excessive formatting. Hashtags over folders. Context over structure. Show don't tell.
-
-**Design eye**: Clean, minimal, non-generic. Gets distracted by formatting options — keep UI stripped down.
-
-**Hardware**: iMac Pro 2018 (3.2 GHz 8-Core Intel Xeon W, 64GB RAM — maxes at Sequoia 15.7.3), MacBook Air (Apple Silicon, latest macOS), iPhone 17 Pro Max, Apple Watch Ultra 3. All non-iMac devices on latest OS.
-
----
-
-## ACTIVE PROJECTS (Priority Order)
-
-**1. YouTube Channel** — #youtube #video #ai #tutorial
-AI tools for non-technical audiences. First video: "You're Using AI Wrong." Target: frontline operational managers, not enterprise knowledge workers. Style refs: Nate B. Jones, Fireship, Igor Pogany.
-Resources: `RileyFile/RileyProjects/YOUTUBE CHANNEL`
-
-**2. Daily AI Audio Brief** — #aibrief #audio #news
-15-20 min solo-narration briefings on breaking AI news. Sources: The Rundown AI, Ben's Bites, TechCrunch AI, arXiv, X/Reddit.
-
-**3. Armor App** — #armor #scripture #bible #fighterverses
-Scripture memorization with gamified 5-mechanic ladder (Word Bank → Word Scramble → Type 1st Letter → Type Full Word → Recite). Fighter Verses data sets A-E ready. Full blueprint exists.
-Resources: `RileyFile/RileyProjects/ARMOR APP`
-
-**4. HarmonyHelper** — #harmony #piano #music #chords
-Piano practice app. Python backend, web frontend.
-Resources: `/Desktop/HarmonyApp/`
-
-**5. AI Operations Monitor** — #conductor #monitor #agents (NEXT BUILD)
-Local agent that watches AI processes on machine, reports costs, flags waste, eventually orchestrates which AI does what. Vision: non-technical conductor for AI workflows. Related: ChatGPT "CONTEXT APP" project exploring conductor/concierge agent orchestration.
-
-**6. Dashboard App (RileyHQ)** — #dashboard #productivity
-Command center for all projects. Zero manual maintenance. Design discovery phase.
-
----
-
-## RILEYDOMAIN STRUCTURE
-
-```
-RileyFile/
-├── RILEY_CONTEXT.md      ← This file
-├── MEMORY.md             ← Curated long-term context
-├── INDEX.md              ← Navigation guide
-├── config.json           ← Project definitions
-├── RileyShare/           ← Default landing zone for all files
-│   └── captures/         ← iOS Shortcut captures, bookmarks
+iCloud Drive/RileyFile/
+├── RILEY_CONTEXT.md      ← This file (source of truth)
+├── config.json           ← Machine-readable project config
+├── INDEX.md              ← Quick reference index
+├── RileyShare/           ← Default landing zone
+│   └── captures/         ← iOS shortcut captures, URLs, bookmarks
 ├── RileyNotes/           ← Notes with #hashtags
 ├── RileyProjects/        ← Active project folders
 │   ├── ARMOR APP/
@@ -232,70 +116,99 @@ RileyFile/
 │   ├── CFA TRAINING/
 │   └── RILEY API/
 ├── RileyAgents/          ← AI memory archives
-├── AI BRIEFS/            ← Daily audio brief production
-├── app/                  ← RileyNotes PWA
+│   ├── CLAUDE MEMORY ARCHIVE/
+│   ├── ChatGPT MEMORY ARCHIVE/
+│   └── BROWSER BOOKMARKS/
+├── AI BRIEFS/            ← Daily AI content production
+│   ├── AUDIO OVERVIEWS/
+│   └── DESCRIPT/
+├── app/                  ← RileyNotes web app (index.html)
+├── setup/                ← Shortcut setup guide
 └── scripts/              ← Automation scripts
 ```
 
----
+### File Routing Rules
 
-## AI TOOLS IN USE
+- Files with #hashtags → RileyNotes
+- Files matching project keywords → RileyProjects/{project}
+- Untagged files → RileyShare (Claude organizes later)
+- Notes from capture app → RileyNotes with auto-generated hashtags
 
-**Claude** (Lead Architect): Claude.ai + Cowork (file ops, terminal commands, builds). Terminal activity is Claude-initiated. Browser automation via Chrome extension — approved domains: github.com, youtube.com, google.com, notion.com, icloud.com, suno.com, chatgpt.com, sider.ai, claude.ai. Can navigate to other AI tools, read their memory/context, and sync back.
-**Sider** (Multi-Model Hub): Browser extension (Plus sub). Quick queries, web research, deep research, model comparison, PDF analysis. Wisebase has Riley Context Hub loaded.
-**ChatGPT** (Plus): Brainstorming, ideation, long-form content, daily AI briefs. 80+ saved memories. Custom GPTs: Visual Guides, Question Crafter, Head of AI Development, Whimsical Diagrams. CONTEXT APP project active. /sync command triggers context pull.
-**Gemini**: Google ecosystem, search, research.
+### Capture Methods
 
-**Sync Protocol**: All AI tools read RILEY_CONTEXT.md from this GitHub repo:
-- **Repo**: `https://github.com/rileyfied/rileyfile`
-- **Raw URL**: `https://raw.githubusercontent.com/rileyfied/rileyfile/main/RILEY_CONTEXT.md`
-- Claude reads GPT memory + Sider Wisebase via browser, updates RileyFile, pushes to GitHub repo.
-- All AI tools reference projects by #hashtag.
-- ⚠️ **Note**: Previous references to "GitHub gist" were incorrect — this is a GitHub **repo**, not a gist. Update any saved /context commands in ChatGPT/Gemini to use the raw URL above.
+- **RileyNotes app**: Manual typing, view all notes (PWA on home screen)
+- **Share Sheet shortcut**: Share from any iOS app → one tap save
+- **Back Tap**: Double-tap phone back = clipboard saved
+- **Voice**: Home screen icon → dictate → saved
+- **macOS automation**: Codex-based capture testing in progress
+- All captures save to `RileyFile/RileyShare/captures/`
 
-**GitHub**: username rileyfied. Login: Sign in with Apple. Email: rileygcolley@icloud.com (HideMyEmail relay: 4m9h2htxjs@privaterelay.appleid.com).
+-----
 
----
+## AI TEAM & COLLABORATION
 
-## DESIGN THINKING (Apply to Every Build)
+### Claude — Lead AI Architect
 
-1. **Empathize**: Fast/messy capture is intentional. Organization should be invisible.
-2. **Define**: What friction is this solving? Ask before building.
-3. **Ideate**: Present options, not just solutions. Match minimal aesthetic.
-4. **Prototype**: Functional first. Artifacts over documentation.
-5. **Test**: Watch for "close but..." feedback. Adjust fast, don't defend.
+**Interface**: Claude.ai (project-based), Cowork (file ops, terminal)
+**Role**: System architecture, file operations, code, builds, RileyFile maintenance
+**Terminal**: All terminal activity is Claude-initiated via Cowork. Riley doesn’t use terminal directly.
 
-## DECISION PRINCIPLES
+### Sider — Multi-Model Hub
 
-Minimal > Feature-rich. Speed > Perfection. Context > Structure. Cross-platform required. Auto-organize, don't ask the user.
+**Interface**: Browser extension + sider.ai web
+**Subscription**: Plus (resets monthly)
+**Models**: GPT-5.2, Gemini 3 Pro, Claude Sonnet 4.5, Grok 4, DeepSeek v3.2 (all unlimited). Elite credits for Deep Research, Scholar Research, Web Creator, AI Slides.
+**Knowledge**: “Riley Context Hub” Wisebase with RILEY_CONTEXT note + ARMOR_APP_SPEC note. Wisebase Instructions set.
+**Use for**: Browser-based tasks, quick queries, web research, model comparison, PDF analysis.
 
----
+### ChatGPT — Ideation Partner
 
-## ACTIVITY LOG
+**Interface**: ChatGPT web/app (Plus subscription)
+**Role**: Brainstorming, long-form content, alternative perspectives
+**Context sync**: Reads RILEY_CONTEXT.md from GitHub URL on /context command.
 
-### 2026-02-16
-- **GPT sync**: Scanned ChatGPT threads — no new project-critical updates since 02-15. GPT had already self-synced earlier today. Confirmed custom GPTs: Visual Guides, Question Crafter, Head of AI Development, Video AI by invideo, Whimsical Diagrams. CONTEXT APP project active with conductor/concierge agent threads.
-- **404 fix**: Corrected sync protocol — was referencing "GitHub gist" but file lives in GitHub repo (`rileyfied/rileyfile`). Updated all references to correct raw URL. Any cached gist URLs in ChatGPT/Gemini /context commands need manual update.
-- **Hardware added**: Device inventory added to WHO IS RILEY section.
-- **config.json**: Verified — no stale gist references. Paths and project definitions current.
+### Gemini — Google Integration
 
-### 2026-02-15
-- **Boil Out**: Nuked OpenClaw (config, binary, credentials, completions). Removed Codex. Stripped agent personality files from RileyFile. Cleaned exposed API keys from .zshrc. Clean slate.
-- **AI Operations Monitor spec complete**: Tracks spend on Claude.ai, Sider, ChatGPT, Gemini. iPhone widget + Mac app. Phased: Monitor → Flag → Execute. PWA prototype first, native if it sticks. Budget: $20+/mo if it delivers.
-- **Key decisions**: Focus on credit/token bank tracking (not flat-rate subs). No terminal tools day-to-day. Monitor before automate.
-- **Cross-platform browser automation**: Claude Chrome extension configured with approved domains. Can SSO via Apple passkey. Tested on GitHub (logged in as rileyfied), ChatGPT, Sider, YouTube, Google, Notion, iCloud, Suno.
-- **Multi-agent context sync**: Claude can now read GPT saved memories (80+), Sider Wisebase, and update RileyFile + GitHub repo to keep all agents in sync.
-- **Pending**: Rotate Anthropic API key at console.anthropic.com (2 keys exposed, removed from machine).
+**Interface**: Gemini web/app, AI Studio
+**Role**: Google ecosystem, search, research
+**Context sync**: Reads RILEY_CONTEXT.md from GitHub URL on /context command.
 
-### 2026-02-14
-- YouTube content planning, desktop capture setup, RileyFile organization (by OpenClaw — now removed)
+### Context Sync Protocol
 
-### Previous
-- YouTube Video #1 script and production plan complete
-- Armor App blueprint and data sets ready
-- 13,890 Safari bookmarks imported
-- iOS capture shortcut live
+1. Claude maintains RILEY_CONTEXT.md as live source of truth
+1. GitHub hosts the web-readable version at raw.githubusercontent.com URL
+1. Sider: Wisebase notes (manual update when context changes significantly)
+1. ChatGPT/Gemini: Paste GitHub URL at session start → they read it
+1. Claude → Claude: Memory persists across project chats; Cowork reads live files
 
----
+-----
 
-*Maintained by Claude. Updated 2026-02-16.*
+## HASHTAG STRATEGY
+
+Active tags: #youtube #videoidea #ai #strategy #armor #scripture #fighterverses #cfa #training #rileyfile #aibrief #conductor #skillsdrills #harmony #piano #monitor #dashboard #virtualman #build #tool #idea #RileyWrite #textfx #twitter #post #article #blog
+
+-----
+
+## KEY DECISIONS & LESSONS
+
+- **YouTube is the priority**. Ship content to external audiences. Stop building tools to build tools.
+- **Market shift**: Conversational AI → autonomous agents that execute tasks. Teach delegation, not prompting.
+- **Minimal > feature-rich**. Speed > perfection. Context > structure. Cross-platform required.
+- **Build for external audiences** — YouTube is the vehicle to reach people before launching apps.
+- **OpenClaw**: Nuked 2026-02-15. API keys rotated. ClaudeAPI_v6 active at console.anthropic.com, not currently used anywhere.
+- **API security**: Key in .zshrc was exposed and removed 2026-02-15. Both .zshrc and .openclaw/.env keys compromised and deleted.
+
+-----
+
+## GITHUB
+
+**Username**: rileyfied
+**Login**: via Apple (email: rileygcolley@icloud.com, private relay: 4m9h2htxjs@privaterelay.appleid.com)
+**Repos**:
+
+- `rileyfied/rileyfile` — RileyFile context system
+- `rileyfied.github.io/esv-lookup/` — ESV Lookup PWA (live)
+
+-----
+
+*Maintained by Claude (Lead AI Architect) | github.com/rileyfied/rileyfile**Maintained by Claude. Updated 2026-02-16.*
