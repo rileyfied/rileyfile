@@ -1,9 +1,11 @@
 {
   "name": "RileyFile",
-  "version": "3.0.0",
-  "description": "Riley's project workspace and capture system",
+  "version": "3.1.0",
+  "description": "Riley's project workspace and AI context system",
   "created": "2026-01-23",
-  "updated": "2026-02-15",
+  "updated": "2026-02-23",
+
+  "context_url": "https://raw.githubusercontent.com/rileyfied/rileyfile/main/RILEY_CONTEXT.md",
 
   "paths": {
     "root": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile",
@@ -12,47 +14,114 @@
     "projects": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile/RileyProjects",
     "agents": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile/RileyAgents",
     "captures": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile/RileyShare/captures",
-    "app": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile/app"
+    "app": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile/app",
+    "codex_agents": "/Users/rileycolleyFW/.codex/AGENTS.md"
   },
 
   "known_projects": [
     {
       "id": "youtube",
       "name": "YouTube Channel",
+      "priority": 1,
       "keywords": ["youtube", "video", "content", "ai tools", "tutorial"],
-      "path": "RileyProjects/YOUTUBE CHANNEL"
+      "hashtags": ["#youtube", "#video", "#ai", "#tutorial"],
+      "path": "RileyProjects/YOUTUBE CHANNEL",
+      "status": "active — Video #1 ready to film"
+    },
+    {
+      "id": "aibrief",
+      "name": "Daily AI Audio Brief",
+      "priority": 2,
+      "keywords": ["aibrief", "audio", "brief", "news", "notebooklm"],
+      "hashtags": ["#aibrief", "#audio", "#news"],
+      "path": "RileyProjects/AI BRIEFS",
+      "status": "active — ongoing production"
     },
     {
       "id": "armor",
       "name": "Armor App",
-      "keywords": ["armor", "fighter verses", "scripture", "memorization", "bible"],
-      "path": "RileyProjects/ARMOR APP"
-    },
-    {
-      "id": "conductor",
-      "name": "AI Operations Monitor",
-      "keywords": ["conductor", "monitor", "agents", "tokens", "orchestrator"],
-      "path": "RileyProjects/AI MONITOR"
-    },
-    {
-      "id": "dashboard",
-      "name": "Dashboard App",
-      "keywords": ["dashboard", "productivity", "command center"],
-      "path": "RileyProjects/DASHBOARD APP"
+      "priority": 3,
+      "keywords": ["armor", "fighter verses", "scripture", "memorization", "bible", "verse"],
+      "hashtags": ["#armor", "#scripture", "#bible", "#fighterverses"],
+      "path": "RileyProjects/ARMOR APP",
+      "status": "active — blueprint ready, development in progress"
     },
     {
       "id": "harmony",
       "name": "HarmonyHelper",
+      "priority": 4,
       "keywords": ["harmony", "piano", "music", "practice", "chords"],
-      "path": "/Users/rileycolleyFW/Desktop/HarmonyApp"
+      "hashtags": ["#harmony", "#piano", "#music"],
+      "path": "/Users/rileycolleyFW/Desktop/HarmonyApp",
+      "status": "queued"
     },
     {
-      "id": "cfa",
-      "name": "CFA Training",
-      "keywords": ["cfa", "chick-fil-a", "restaurant", "training"],
-      "path": "RileyProjects/CFA TRAINING"
+      "id": "conductor",
+      "name": "AI Operations Monitor",
+      "priority": 5,
+      "keywords": ["conductor", "monitor", "agents", "tokens", "orchestrator", "spend"],
+      "hashtags": ["#conductor", "#monitor", "#agents"],
+      "path": "RileyProjects/AI MONITOR",
+      "status": "design phase — spec complete"
+    },
+    {
+      "id": "dashboard",
+      "name": "Dashboard App (RileyHQ)",
+      "priority": 6,
+      "keywords": ["dashboard", "productivity", "command center", "rileyhq"],
+      "hashtags": ["#dashboard", "#productivity"],
+      "path": "RileyProjects/DASHBOARD APP",
+      "status": "design discovery"
+    },
+    {
+      "id": "virtualmanager",
+      "name": "Virtual Restaurant Manager",
+      "priority": 7,
+      "keywords": ["virtualmanager", "visor", "restaurant", "cfa", "chick-fil-a", "training"],
+      "hashtags": ["#virtualmanager", "#visor", "#cfa"],
+      "path": "RileyProjects/CFA TRAINING",
+      "status": "concept — long-term vision"
     }
   ],
+
+  "ai_team": {
+    "claude": {
+      "role": "Lead Architect",
+      "interface": "Claude.ai, Cowork",
+      "session_start": "reads RileyFile project files directly",
+      "specialties": ["file ops", "system architecture", "builds", "context sync", "terminal"]
+    },
+    "codex": {
+      "role": "Local Agent",
+      "interface": "Terminal / CLI",
+      "session_start": "reads ~/.codex/AGENTS.md → fetches RILEY_CONTEXT.md from GitHub",
+      "agents_file": "/Users/rileycolleyFW/.codex/AGENTS.md",
+      "specialties": ["automations", "local file ops", "scripts", "capture tasks"]
+    },
+    "chatgpt": {
+      "role": "Ideation Partner",
+      "interface": "ChatGPT web/app",
+      "session_start": "reads RILEY_CONTEXT.md from GitHub via /context command",
+      "handshake_file": "CHATGPT.md",
+      "specialties": ["brainstorming", "long-form content", "AI briefs", "scripts"]
+    },
+    "gemini": {
+      "role": "Google Integration",
+      "interface": "Gemini web/app, AI Studio",
+      "session_start": "reads RILEY_CONTEXT.md from GitHub via /context command",
+      "handshake_file": "GEMINI.md",
+      "specialties": ["Google ecosystem", "search", "research"]
+    },
+    "sider": {
+      "role": "Multi-Model Hub",
+      "interface": "Browser extension (Plus)",
+      "session_start": "reads Wisebase — Riley Context Hub collection",
+      "handshake_file": "SIDER.md",
+      "wisebase": "Riley Context Hub (RILEY_CONTEXT + ARMOR_APP_SPEC notes loaded)",
+      "subscription": "Plus (resets monthly)",
+      "specialties": ["browser queries", "web research", "PDF analysis", "model comparison"]
+    }
+  },
 
   "file_routing_rules": {
     "to_notes": {
@@ -66,5 +135,14 @@
     "default": {
       "destination": "RileyShare"
     }
+  },
+
+  "sync": {
+    "github_repo": "https://github.com/rileyfied/rileyfile",
+    "raw_context_url": "https://raw.githubusercontent.com/rileyfied/rileyfile/main/RILEY_CONTEXT.md",
+    "token_name": "context-sync-claude",
+    "token_expires": "2026-06-09",
+    "auto_sync": false,
+    "sync_note": "Manual — Claude pushes after significant sessions. Auto-sync via launchd not yet configured."
   }
 }

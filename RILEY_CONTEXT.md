@@ -1,7 +1,7 @@
 # RILEY_CONTEXT.md
-## Last Updated: 2026-02-15
+## Last Updated: 2026-02-23
 
-> **Purpose**: Source of truth for Riley's projects, preferences, and active work. Read by Claude (lead architect) and available to any AI tool Riley uses.
+> **Purpose**: Source of truth for Riley's projects, preferences, and active work. Read by Claude (lead architect) and all AI agents. Hosted at: https://raw.githubusercontent.com/rileyfied/rileyfile/main/RILEY_CONTEXT.md
 
 ---
 
@@ -22,21 +22,24 @@ AI tools for non-technical audiences. First video: "You're Using AI Wrong." Targ
 Resources: `RileyFile/RileyProjects/YOUTUBE CHANNEL`
 
 **2. Daily AI Audio Brief** — #aibrief #audio #news
-15-20 min solo-narration briefings on breaking AI news. Sources: The Rundown AI, Ben's Bites, TechCrunch AI, arXiv, X/Reddit.
+15-20 min solo-narration briefings on breaking AI news. Sources: The Rundown AI, Ben's Bites, TechCrunch AI, arXiv, X/Reddit. NotebookLM format with copy/paste-ready blocks.
 
 **3. Armor App** — #armor #scripture #bible #fighterverses
-Scripture memorization with gamified 5-mechanic ladder (Word Bank → Word Scramble → Type 1st Letter → Type Full Word → Recite). Fighter Verses data sets A-E ready. Full blueprint exists.
+Scripture memorization with gamified 5-mechanic ladder (Word Bank → Word Scramble → Type 1st Letter → Type Full Word → Recite). Fighter Verses data sets A-E ready. Full blueprint exists at `RileyProjects/ARMOR APP/Armour_GPT_InfoArchBlueprint_v1.rtf`.
 Resources: `RileyFile/RileyProjects/ARMOR APP`
 
 **4. HarmonyHelper** — #harmony #piano #music #chords
 Piano practice app. Python backend, web frontend.
 Resources: `/Desktop/HarmonyApp/`
 
-**5. AI Operations Monitor** — #conductor #monitor #agents (NEXT BUILD)
-Local agent that watches AI processes on machine, reports costs, flags waste, eventually orchestrates which AI does what. Vision: non-technical conductor for AI workflows.
+**5. AI Operations Monitor** — #conductor #monitor #agents
+Local agent that watches AI processes on machine, reports costs, flags waste, eventually orchestrates which AI does what. Vision: non-technical conductor for AI workflows. PWA prototype first.
 
 **6. Dashboard App (RileyHQ)** — #dashboard #productivity
 Command center for all projects. Zero manual maintenance. Design discovery phase.
+
+**7. Virtual Restaurant Manager** — #virtualmanager #visor #cfa
+Knowledge base agent for restaurant operations. All roles in one place — owner, managers, vendors, HR, etc. Multi-year vision. Concept documented.
 
 ---
 
@@ -44,36 +47,65 @@ Command center for all projects. Zero manual maintenance. Design discovery phase
 
 ```
 RileyFile/
-├── RILEY_CONTEXT.md      ← This file
-├── MEMORY.md             ← Curated long-term context
-├── INDEX.md              ← Navigation guide
-├── config.json           ← Project definitions
-├── RileyShare/           ← Default landing zone for all files
-│   └── captures/         ← iOS Shortcut captures, bookmarks
-├── RileyNotes/           ← Notes with #hashtags
-├── RileyProjects/        ← Active project folders
+├── RILEY_CONTEXT.md        ← This file (source of truth)
+├── README.md               ← Repo overview
+├── INDEX.md                ← Navigation guide
+├── MEMORY.md               ← Curated long-term context
+├── config.json             ← Project definitions
+├── AGENTS.md               ← Codex agent instructions (also at ~/.codex/AGENTS.md)
+├── CHATGPT.md              ← ChatGPT handshake + session start protocol
+├── GEMINI.md               ← Gemini handshake + session start protocol
+├── SIDER.md                ← Sider handshake + Wisebase info
+├── CONTEXT_SYNC_SETUP.md   ← How /context works across all agents
+├── RILEY_CONTEXT_SYNC.md   ← External-facing sync copy (for gist)
+├── RileyShare/             ← Default landing zone for all files
+│   └── captures/           ← iOS Shortcut captures, bookmarks
+├── RileyNotes/             ← Notes with #hashtags
+├── RileyProjects/          ← Active project folders
 │   ├── ARMOR APP/
 │   ├── YOUTUBE CHANNEL/
 │   ├── DASHBOARD APP/
 │   ├── CFA TRAINING/
 │   └── RILEY API/
-├── RileyAgents/          ← AI memory archives
-├── AI BRIEFS/            ← Daily audio brief production
-├── app/                  ← RileyNotes PWA
-└── scripts/              ← Automation scripts
+├── RileyAgents/            ← AI memory archives
+├── AI BRIEFS/              ← Daily audio brief production
+├── app/                    ← RileyNotes PWA
+└── scripts/                ← Automation scripts
 ```
 
 ---
 
-## AI TOOLS IN USE
+## AI TEAM
 
-**Claude** (Lead Architect): Claude.ai + Cowork (file ops, terminal commands, builds). Terminal activity is Claude-initiated. Browser automation via Chrome extension — approved domains: github.com, youtube.com, google.com, notion.com, icloud.com, suno.com, chatgpt.com, sider.ai, claude.ai. Can navigate to other AI tools, read their memory/context, and sync back.
-**Sider** (Multi-Model Hub): Browser extension (Plus sub). Quick queries, web research, deep research, model comparison, PDF analysis. Wisebase has Riley Context Hub loaded.
-**ChatGPT**: Brainstorming, ideation, long-form content, daily AI briefs. 80+ saved memories. /context command reads GitHub gist.
-**Gemini**: Google ecosystem, search, research. /context command reads GitHub gist.
+**Claude** (Lead Architect) — Claude.ai + Cowork
+File ops, terminal commands, builds, context sync, system architecture. Terminal activity is Claude-initiated. Session start: reads this file.
 
-**Sync Protocol**: Claude reads GPT memory + Sider Wisebase via browser, updates RileyFile, pushes to GitHub gist. All AI tools reference projects by #hashtag.
-**GitHub**: username rileyfied. Login: Sign in with Apple.
+**Codex** — Terminal / local agentic tasks
+Runs automations, file operations, local scripts. Session start: reads `~/.codex/AGENTS.md` which points to this GitHub URL. `/context` or `/rf` = fetch and confirm "Context loaded ✓".
+
+**Sider** (Multi-Model Hub) — Browser extension (Plus)
+Quick queries, web research, deep research, model comparison, PDF analysis. Wisebase "Riley Context Hub" loaded with RILEY_CONTEXT + ARMOR_APP_SPEC notes. Session start: reads Wisebase.
+
+**ChatGPT** — Ideation, long-form content, AI briefs
+Brainstorming, daily AI briefs, scripts. 80+ saved memories. `/context` = fetches GitHub URL. Session start: loads context from GitHub.
+
+**Gemini** — Google ecosystem
+Search, research, Google integration. `/context` = fetches GitHub URL. Session start: loads context from GitHub.
+
+**Sync Protocol**: Claude updates RILEY_CONTEXT.md locally, commits and pushes to GitHub. All agents reference `https://raw.githubusercontent.com/rileyfied/rileyfile/main/RILEY_CONTEXT.md` as source of truth.
+
+**GitHub**: username `rileyfied`. Login: Sign in with Apple. Token: `context-sync-claude` (active through 2026-06-09).
+
+---
+
+## CAPTURE METHODS
+
+- RileyNotes app (manual typing)
+- iOS Share Sheet shortcut (one-tap save)
+- Back Tap (double-tap phone back = clipboard saved)
+- Voice capture via home screen icon
+- macOS automation (Codex-based capture — tested and working 2026-02-19)
+- All captures land in `RileyShare/captures/` and get organized by Claude
 
 ---
 
@@ -87,29 +119,34 @@ RileyFile/
 
 ## DECISION PRINCIPLES
 
-Minimal > Feature-rich. Speed > Perfection. Context > Structure. Cross-platform required. Auto-organize, don't ask the user.
+Minimal > Feature-rich. Speed > Perfection. Context > Structure. Cross-platform required. Auto-organize, don't ask the user. Build for others to use — tools should be shareable and non-technical-friendly.
 
 ---
 
 ## ACTIVITY LOG
 
+### 2026-02-23
+- **Agent handshake files pushed to GitHub**: CHATGPT.md, GEMINI.md, SIDER.md, CONTEXT_SYNC_SETUP.md, INDEX.md, MEMORY.md, RILEY_CONTEXT_SYNC.md all committed and live on repo.
+- **Codex AGENTS.md created**: Written to `~/.codex/AGENTS.md` and `~/AGENTS.md`. Contains /context protocol, workflow rules, file routing, capture methods.
+- **Git auth resolved**: context-sync-claude token authenticated. Email privacy conflict resolved with noreply address. Merge conflict (unrelated histories) resolved keeping local versions.
+- **Identified gap**: No auto-sync automation exists. /sync requires manual Claude session trigger. Action needed: launchd job or Codex scheduled task.
+
 ### 2026-02-15
-- **Boil Out**: Nuked OpenClaw (config, binary, credentials, completions). Removed Codex. Stripped agent personality files from RileyFile. Cleaned exposed API keys from .zshrc. Clean slate.
-- **AI Operations Monitor spec complete**: Tracks spend on Claude.ai, Sider, ChatGPT, Gemini. iPhone widget + Mac app. Phased: Monitor → Flag → Execute. PWA prototype first, native if it sticks. Budget: $20+/mo if it delivers.
-- **Key decisions**: Focus on credit/token bank tracking (not flat-rate subs). No terminal tools day-to-day. Monitor before automate.
-- **Cross-platform browser automation**: Claude Chrome extension configured with approved domains. Can SSO via Apple passkey. Tested on GitHub (logged in as rileyfied), ChatGPT, Sider, YouTube, Google, Notion, iCloud, Suno.
-- **Multi-agent context sync**: Claude can now read GPT saved memories (80+), Sider Wisebase, and update RileyFile + GitHub gist to keep all agents in sync.
-- **Pending**: Rotate Anthropic API key at console.anthropic.com (2 keys exposed, removed from machine).
+- **Boil Out**: Nuked OpenClaw (config, binary, credentials, completions). Removed Codex (old version). Stripped agent personality files from RileyFile. Cleaned exposed API keys from .zshrc.
+- **AI Operations Monitor spec complete**: Tracks spend on Claude.ai, Sider, ChatGPT, Gemini. iPhone widget + Mac app. Phased: Monitor → Flag → Execute.
+- **Cross-platform browser automation**: Claude Chrome extension configured with approved domains.
+- **Multi-agent context sync**: Claude can read GPT saved memories, Sider Wisebase, and update RileyFile + GitHub.
 
 ### 2026-02-14
-- YouTube content planning, desktop capture setup, RileyFile organization (by OpenClaw — now removed)
+- YouTube content planning, desktop capture setup, RileyFile organization
 
 ### Previous
 - YouTube Video #1 script and production plan complete
 - Armor App blueprint and data sets ready
 - 13,890 Safari bookmarks imported
 - iOS capture shortcut live
+- Sider onboarded with Riley Context Hub Wisebase
 
 ---
 
-*Maintained by Claude. Updated 2026-02-15.*
+*Maintained by Claude. Push to GitHub after each significant session.*
