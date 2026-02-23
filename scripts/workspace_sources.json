@@ -1,24 +1,24 @@
 {
   "source_roots": [
     {
-      "path": "/Users/rileycolleyFW/.codex",
+      "path": "/Users/rileycolleyFW/.codex/AGENTS.md",
       "target_inbox": "codex",
-      "label": "Codex Home"
+      "label": "Codex AGENTS"
     },
     {
-      "path": "/Users/rileycolleyFW/.claude",
-      "target_inbox": "claude",
-      "label": "Claude Local"
+      "path": "/Users/rileycolleyFW/AGENTS.md",
+      "target_inbox": "codex",
+      "label": "Home AGENTS"
     },
     {
-      "path": "/Users/rileycolleyFW/.gemini",
+      "path": "/Users/rileycolleyFW/.gemini/GEMINI.md",
       "target_inbox": "gemini",
-      "label": "Gemini Local"
+      "label": "Gemini AGENTS"
     },
     {
-      "path": "/Users/rileycolleyFW/dev",
+      "path": "/Users/rileycolleyFW/dev/RileyCapture",
       "target_inbox": "codex",
-      "label": "Dev Workspace"
+      "label": "RileyCapture"
     },
     {
       "path": "/Users/rileycolleyFW/Documents/GitHub",

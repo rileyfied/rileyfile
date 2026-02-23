@@ -73,10 +73,10 @@ def now_times() -> tuple[datetime, datetime]:
 def default_config() -> dict[str, Any]:
     home = Path.home()
     candidates = [
-        (home / ".codex", "codex", "Codex Home"),
-        (home / ".claude", "claude", "Claude Local"),
-        (home / ".gemini", "gemini", "Gemini Local"),
-        (home / "dev", "codex", "Dev Workspace"),
+        (home / ".codex" / "AGENTS.md", "codex", "Codex AGENTS"),
+        (home / "AGENTS.md", "codex", "Home AGENTS"),
+        (home / ".gemini" / "GEMINI.md", "gemini", "Gemini AGENTS"),
+        (home / "dev" / "RileyCapture", "codex", "RileyCapture"),
         (home / "Documents" / "GitHub", "codex", "GitHub Workspace"),
         (home / "Desktop" / "HarmonyApp", "codex", "HarmonyApp"),
         (home / "Library" / "Mobile Documents" / "com~apple~CloudDocs" / "RileyFile", "codex", "iCloud RileyFile"),
