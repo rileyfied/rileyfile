@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-import hashlib
 import json
 import os
 from dataclasses import dataclass
@@ -81,8 +80,8 @@ def default_config() -> dict[str, Any]:
         (home / "Documents" / "GitHub", "codex", "GitHub Workspace"),
         (home / "Desktop" / "HarmonyApp", "codex", "HarmonyApp"),
         (home / "Library" / "Mobile Documents" / "com~apple~CloudDocs" / "RileyFile", "codex", "iCloud RileyFile"),
-        (home / "Library" / "Group Containers" / "group.com.apple.notes", "codex", "Apple Notes Data"),
-        (home / "Library" / "Group Containers" / "9K33E3U3T4.net.shinyfrog.bear", "codex", "Bear Data"),
+        (home / "Library" / "Group Containers" / "group.com.apple.notes" / "NoteStore.sqlite", "codex", "Apple Notes DB"),
+        (home / "Library" / "Group Containers" / "9K33E3U3T4.net.shinyfrog.bear" / "Application Data" / "database.sqlite", "codex", "Bear DB"),
     ]
 
     source_roots = []
@@ -102,8 +101,8 @@ def default_config() -> dict[str, Any]:
         "exclude_dir_names": sorted(EXCLUDE_DIR_NAMES),
         "allowed_extensions": sorted(TEXT_EXTENSIONS),
         "max_file_size_bytes": 2_000_000,
+        "max_changes_per_run": 200,
         "bootstrap_recent_hours": 24,
-        "snippet_char_limit": 1400,
     }
 
 
@@ -150,26 +149,6 @@ def is_excluded(path: Path, excluded_paths: list[Path]) -> bool:
     return False
 
 
-def sha256_prefix(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as f:
-        while True:
-            chunk = f.read(8192)
-            if not chunk:
-                break
-            digest.update(chunk)
-    return digest.hexdigest()[:16]
-
-
-def safe_read_snippet(path: Path, char_limit: int) -> str | None:
-    try:
-        text = path.read_text(encoding="utf-8", errors="replace")
-    except OSError:
-        return None
-    snippet = text[:char_limit]
-    return snippet.strip()
-
-
 def file_fingerprint(path: Path, stat: os.stat_result) -> str:
     return f"{stat.st_size}:{stat.st_mtime_ns}"
 
@@ -192,7 +171,50 @@ def collect_changes(
     bootstrap_cutoff = now_utc - timedelta(hours=bootstrap_hours)
     initialized = bool(state.get("initialized", False))
 
+    max_changes = int(cfg.get("max_changes_per_run", 200))
+
+    def maybe_record(path: Path, source: SourceRoot) -> None:
+        nonlocal current, changes
+        if is_excluded(path, excluded_paths):
+            return
+        try:
+            stat = path.stat()
+        except OSError:
+            return
+
+        key = str(path)
+        fp = file_fingerprint(path, stat)
+        current[key] = fp
+
+        previous_fp = previous.get(key)
+        if previous_fp == fp:
+            return
+
+        mtime_utc = datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc)
+        if not initialized and mtime_utc < bootstrap_cutoff:
+            return
+
+        suffix = path.suffix.lower()
+        is_text = suffix in allowed_exts and stat.st_size <= max_size
+        if len(changes) < max_changes:
+            changes.append(
+                {
+                    "source_label": source.label,
+                    "source_root": str(source.path),
+                    "target_inbox": source.target_inbox,
+                    "path": str(path),
+                    "size": stat.st_size,
+                    "mtime_et": mtime_utc.astimezone(ET_TZ).strftime("%Y-%m-%d %H:%M:%S %Z"),
+                    "fingerprint": fp,
+                    "kind": "text" if is_text else "binary_or_large",
+                }
+            )
+
     for source in sources:
+        if source.path.is_file():
+            maybe_record(source.path, source)
+            continue
+
         for root, dirs, files in os.walk(source.path, topdown=True):
             root_path = Path(root)
             dirs[:] = [
@@ -200,50 +222,10 @@ def collect_changes(
                 for d in dirs
                 if d not in excluded_names and not is_excluded(root_path / d, excluded_paths)
             ]
-
             if is_excluded(root_path, excluded_paths):
                 continue
-
             for name in files:
-                path = root_path / name
-                if is_excluded(path, excluded_paths):
-                    continue
-
-                try:
-                    stat = path.stat()
-                except OSError:
-                    continue
-
-                key = str(path)
-                fp = file_fingerprint(path, stat)
-                current[key] = fp
-
-                previous_fp = previous.get(key)
-                is_new_or_changed = previous_fp != fp
-                if not is_new_or_changed:
-                    continue
-
-                mtime_utc = datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc)
-                if not initialized and mtime_utc < bootstrap_cutoff:
-                    continue
-
-                suffix = path.suffix.lower()
-                is_text = suffix in allowed_exts and stat.st_size <= max_size
-                snippet = safe_read_snippet(path, int(cfg.get("snippet_char_limit", 1400))) if is_text else None
-                rel = str(path)
-                changes.append(
-                    {
-                        "source_label": source.label,
-                        "source_root": str(source.path),
-                        "target_inbox": source.target_inbox,
-                        "path": rel,
-                        "size": stat.st_size,
-                        "mtime_et": mtime_utc.astimezone(ET_TZ).strftime("%Y-%m-%d %H:%M:%S %Z"),
-                        "sha16": sha256_prefix(path),
-                        "kind": "text" if is_text else "binary_or_large",
-                        "snippet": snippet,
-                    }
-                )
+                maybe_record(root_path / name, source)
 
     return current, changes
 
@@ -281,12 +263,10 @@ def write_inbox_drops(changes: list[dict[str, Any]], now_et: datetime) -> list[s
                     f"- Source: {item['source_label']} ({item['source_root']})",
                     f"- Modified: {item['mtime_et']}",
                     f"- Size: {item['size']} bytes",
-                    f"- SHA256 (16): `{item['sha16']}`",
+                    f"- Fingerprint: `{item['fingerprint']}`",
                     f"- Kind: {item['kind']}",
                 ]
             )
-            if item["snippet"]:
-                lines.extend(["- Snippet:", "```text", item["snippet"], "```"])
             lines.append("")
 
         out_file.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")

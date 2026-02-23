@@ -36,14 +36,14 @@
       "label": "iCloud RileyFile"
     },
     {
-      "path": "/Users/rileycolleyFW/Library/Group Containers/group.com.apple.notes",
+      "path": "/Users/rileycolleyFW/Library/Group Containers/group.com.apple.notes/NoteStore.sqlite",
       "target_inbox": "codex",
-      "label": "Apple Notes Data"
+      "label": "Apple Notes DB"
     },
     {
-      "path": "/Users/rileycolleyFW/Library/Group Containers/9K33E3U3T4.net.shinyfrog.bear",
+      "path": "/Users/rileycolleyFW/Library/Group Containers/9K33E3U3T4.net.shinyfrog.bear/Application Data/database.sqlite",
       "target_inbox": "codex",
-      "label": "Bear Data"
+      "label": "Bear DB"
     }
   ],
   "exclude_paths": [
@@ -89,6 +89,6 @@
     ".zsh"
   ],
   "max_file_size_bytes": 2000000,
-  "bootstrap_recent_hours": 24,
-  "snippet_char_limit": 1400
+  "max_changes_per_run": 200,
+  "bootstrap_recent_hours": 24
 }

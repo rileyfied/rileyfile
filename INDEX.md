@@ -1,6 +1,6 @@
 # RileyFile Index
 *Last updated: 2026-02-23*
-*Last context sync run: 2026-02-23 05:58:29 (America/New_York)*
+*Last context sync run: 2026-02-23 06:06:34 (America/New_York)*
 *Quick reference for navigating the workspace*
 
 ## Core Files
@@ -83,3 +83,9 @@ Notes with `#tags`. Search by hashtag, not folders.
 - `inbox/claude/2026-02-23_055811_workspace_sync.md`
 - `inbox/codex/2026-02-23_055811_workspace_sync.md`
 - `inbox/codex/2026-02-23_055829_workspace_sync.md`
+
+### 2026-02-23 06:06:29
+- `inbox/codex/2026-02-23_060623_workspace_sync.md`
+
+### 2026-02-23 06:06:34
+- `inbox/codex/2026-02-23_060634_workspace_sync.md`
