@@ -7513,3 +7513,21 @@ bear://x-callback-url/open-note?id=
 - Size: 1918 bytes
 - Fingerprint: `1918:1771862467325464461`
 - Kind: text
+
+## Inbox Import — 2026-02-23 18:42:44
+- Source: `inbox/codex/2026-02-23_184244_workspace_sync.md`
+
+# Workspace Sync Drop
+
+- Captured At: 2026-02-23 18:42:44 EST
+- Target Inbox: codex
+- Changed Files: 1
+
+## Changed Files
+
+### `/Users/rileycolleyFW/dev/RileyCapture/.DS_Store`
+- Source: RileyCapture (/Users/rileycolleyFW/dev/RileyCapture)
+- Modified: 2026-02-23 18:42:42 EST
+- Size: 8196 bytes
+- Fingerprint: `8196:1771890162757571332`
+- Kind: binary_or_large
