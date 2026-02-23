@@ -1,5 +1,7 @@
 # RileyFile Index
 *Last updated: 2026-02-23*
+*Last context sync run: 2026-02-23 02:29:01 (America/New_York)*
+*Quick reference for navigating the workspace*
 
 ## Core Files
 | File | Purpose |
@@ -56,3 +58,10 @@ Notes with `#tags`. Search by hashtag, not folders.
 3. Armor App — Development in progress
 4. AI Operations Monitor — Spec complete, next build
 5. HarmonyHelper — Queued
+
+---
+
+## Context Sync Runs (Append-Only)
+
+### 2026-02-23 02:29:01
+- (none)
