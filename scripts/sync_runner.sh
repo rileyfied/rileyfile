@@ -18,6 +18,8 @@ fi
 
 git pull --rebase --autostash
 
+python3 scripts/collect_workspace_updates.py
+
 COMPILE_OUTPUT="$(python3 scripts/compile_context.py)"
 echo "$COMPILE_OUTPUT"
 PROCESSED_NEW_FILES="$(printf '%s\n' "$COMPILE_OUTPUT" | awk -F= '/^processed_new_files=/{print $2}')"

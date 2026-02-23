@@ -1,0 +1,94 @@
+{
+  "source_roots": [
+    {
+      "path": "/Users/rileycolleyFW/.codex",
+      "target_inbox": "codex",
+      "label": "Codex Home"
+    },
+    {
+      "path": "/Users/rileycolleyFW/.claude",
+      "target_inbox": "claude",
+      "label": "Claude Local"
+    },
+    {
+      "path": "/Users/rileycolleyFW/.gemini",
+      "target_inbox": "gemini",
+      "label": "Gemini Local"
+    },
+    {
+      "path": "/Users/rileycolleyFW/dev",
+      "target_inbox": "codex",
+      "label": "Dev Workspace"
+    },
+    {
+      "path": "/Users/rileycolleyFW/Documents/GitHub",
+      "target_inbox": "codex",
+      "label": "GitHub Workspace"
+    },
+    {
+      "path": "/Users/rileycolleyFW/Desktop/HarmonyApp",
+      "target_inbox": "codex",
+      "label": "HarmonyApp"
+    },
+    {
+      "path": "/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile",
+      "target_inbox": "codex",
+      "label": "iCloud RileyFile"
+    },
+    {
+      "path": "/Users/rileycolleyFW/Library/Group Containers/group.com.apple.notes",
+      "target_inbox": "codex",
+      "label": "Apple Notes Data"
+    },
+    {
+      "path": "/Users/rileycolleyFW/Library/Group Containers/9K33E3U3T4.net.shinyfrog.bear",
+      "target_inbox": "codex",
+      "label": "Bear Data"
+    }
+  ],
+  "exclude_paths": [
+    "/Users/rileycolleyFW/dev/rileyfile"
+  ],
+  "exclude_dir_names": [
+    ".git",
+    ".next",
+    ".venv",
+    "DerivedData",
+    "__pycache__",
+    "build",
+    "dist",
+    "node_modules",
+    "target",
+    "venv"
+  ],
+  "allowed_extensions": [
+    ".css",
+    ".csv",
+    ".go",
+    ".html",
+    ".ini",
+    ".java",
+    ".js",
+    ".json",
+    ".jsx",
+    ".kt",
+    ".md",
+    ".py",
+    ".rs",
+    ".rtf",
+    ".sh",
+    ".sql",
+    ".swift",
+    ".toml",
+    ".ts",
+    ".tsx",
+    ".txt",
+    ".xml",
+    ".yaml",
+    ".yml",
+    ".zsh"
+  ],
+  "max_file_size_bytes": 2000000,
+  "bootstrap_recent_hours": 24,
+  "snippet_char_limit": 1400
+}

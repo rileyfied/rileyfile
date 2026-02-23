@@ -1,2 +1,3 @@
 logs/*.log
 scripts/.last_run.json
+scripts/.workspace_sync_state.json

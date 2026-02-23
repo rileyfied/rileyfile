@@ -29,10 +29,19 @@
   </dict>
 
   <key>StartInterval</key>
-  <integer>900</integer>
+  <integer>300</integer>
 
   <key>WatchPaths</key>
   <array>
+    <string>/Users/rileycolleyFW/.codex</string>
+    <string>/Users/rileycolleyFW/.claude</string>
+    <string>/Users/rileycolleyFW/.gemini</string>
+    <string>/Users/rileycolleyFW/dev</string>
+    <string>/Users/rileycolleyFW/Documents/GitHub</string>
+    <string>/Users/rileycolleyFW/Desktop/HarmonyApp</string>
+    <string>/Users/rileycolleyFW/Library/Mobile Documents/com~apple~CloudDocs/RileyFile</string>
+    <string>/Users/rileycolleyFW/Library/Group Containers/group.com.apple.notes</string>
+    <string>/Users/rileycolleyFW/Library/Group Containers/9K33E3U3T4.net.shinyfrog.bear</string>
     <string>/Users/rileycolleyFW/dev/rileyfile/inbox/chatgpt</string>
     <string>/Users/rileycolleyFW/dev/rileyfile/inbox/gemini</string>
     <string>/Users/rileycolleyFW/dev/rileyfile/inbox/claude</string>
