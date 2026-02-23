@@ -57,3 +57,12 @@ Productivity command center. Zero manual maintenance, proactive insights. Design
 ---
 
 *Last updated: 2026-02-15*
+
+## Memory Candidates (Append-Only)
+
+### 2026-02-23 05:32:44 — codex — `inbox/codex/2026-02-23_041536_launchd_test.md`
+```md
+# launchd test
+
+- Mon Feb 23 04:15:36 EST 2026
+```
