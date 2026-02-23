@@ -6016,3 +6016,28 @@ bear://x-callback-url/open-note?id=
 - Size: 4471183 bytes
 - Fingerprint: `4471183:1771844826099894064`
 - Kind: binary_or_large
+
+## Inbox Import — 2026-02-23 06:07:17
+- Source: `inbox/codex/2026-02-23_060717_workspace_sync.md`
+
+# Workspace Sync Drop
+
+- Captured At: 2026-02-23 06:07:17 EST
+- Target Inbox: codex
+- Changed Files: 2
+
+## Changed Files
+
+### `/Users/rileycolleyFW/.codex/models_cache.json`
+- Source: Codex Home (/Users/rileycolleyFW/.codex)
+- Modified: 2026-02-23 06:07:15 EST
+- Size: 168310 bytes
+- Fingerprint: `168310:1771844835723662542`
+- Kind: text
+
+### `/Users/rileycolleyFW/.codex/sessions/2026/02/23/rollout-2026-02-23T02-25-44-019c8963-caf4-71e3-9b0a-b8a01bface14.jsonl`
+- Source: Codex Home (/Users/rileycolleyFW/.codex)
+- Modified: 2026-02-23 06:07:15 EST
+- Size: 4508192 bytes
+- Fingerprint: `4508192:1771844835722490869`
+- Kind: binary_or_large
