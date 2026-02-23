@@ -7477,3 +7477,21 @@ bear://x-callback-url/open-note?id=
 - Size: 1269425 bytes
 - Fingerprint: `1269425:1769561278000000000`
 - Kind: binary_or_large
+
+## Inbox Import — 2026-02-23 11:00:56
+- Source: `inbox/codex/2026-02-23_110056_workspace_sync.md`
+
+# Workspace Sync Drop
+
+- Captured At: 2026-02-23 11:00:56 EST
+- Target Inbox: codex
+- Changed Files: 1
+
+## Changed Files
+
+### `/Users/rileycolleyFW/AGENTS.md`
+- Source: Home AGENTS (/Users/rileycolleyFW/AGENTS.md)
+- Modified: 2026-02-23 11:00:54 EST
+- Size: 1853 bytes
+- Fingerprint: `1853:1771862454860722707`
+- Kind: text
