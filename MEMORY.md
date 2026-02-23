@@ -7591,3 +7591,21 @@ bear://x-callback-url/open-note?id=
 - Fingerprint: `1853:1771862454860722707`
 - Kind: text
 ```
+
+### 2026-02-23 11:01:08 — codex — `inbox/codex/2026-02-23_110108_workspace_sync.md`
+```md
+# Workspace Sync Drop
+
+- Captured At: 2026-02-23 11:01:08 EST
+- Target Inbox: codex
+- Changed Files: 1
+
+## Changed Files
+
+### `/Users/rileycolleyFW/AGENTS.md`
+- Source: Home AGENTS (/Users/rileycolleyFW/AGENTS.md)
+- Modified: 2026-02-23 11:01:07 EST
+- Size: 1918 bytes
+- Fingerprint: `1918:1771862467325464461`
+- Kind: text
+```
