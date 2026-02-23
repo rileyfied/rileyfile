@@ -8,11 +8,11 @@
   <key>ProgramArguments</key>
   <array>
     <string>/bin/bash</string>
-    <string>/Users/rileycolleyFW/Documents/GitHub/rileyfile/scripts/sync_runner.sh</string>
+    <string>/Users/rileycolleyFW/dev/rileyfile/scripts/sync_runner.sh</string>
   </array>
 
   <key>WorkingDirectory</key>
-  <string>/Users/rileycolleyFW/Documents/GitHub/rileyfile</string>
+  <string>/Users/rileycolleyFW/dev/rileyfile</string>
 
   <key>EnvironmentVariables</key>
   <dict>
@@ -29,10 +29,10 @@
   </dict>
 
   <key>StandardOutPath</key>
-  <string>/Users/rileycolleyFW/Documents/GitHub/rileyfile/logs/contextsync.stdout.log</string>
+  <string>/Users/rileycolleyFW/dev/rileyfile/logs/contextsync.stdout.log</string>
 
   <key>StandardErrorPath</key>
-  <string>/Users/rileycolleyFW/Documents/GitHub/rileyfile/logs/contextsync.stderr.log</string>
+  <string>/Users/rileycolleyFW/dev/rileyfile/logs/contextsync.stderr.log</string>
 
   <key>RunAtLoad</key>
   <false/>
