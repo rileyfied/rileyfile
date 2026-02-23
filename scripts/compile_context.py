@@ -186,9 +186,8 @@ def main() -> int:
 
     if imports:
         append_memory_candidates(imports, run_stamp)
-
-    update_index(processed_rel_paths, run_stamp)
-    update_riley_context(processed_rel_paths, run_stamp, today_date)
+        update_index(processed_rel_paths, run_stamp)
+        update_riley_context(processed_rel_paths, run_stamp, today_date)
 
     new_processed_files = sorted(processed_set.union({p.relative_to(REPO_ROOT).as_posix() for p in new_files}))
     save_state(new_processed_files, now_utc, now_et)

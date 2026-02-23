@@ -28,6 +28,17 @@
     <integer>30</integer>
   </dict>
 
+  <key>StartInterval</key>
+  <integer>900</integer>
+
+  <key>WatchPaths</key>
+  <array>
+    <string>/Users/rileycolleyFW/dev/rileyfile/inbox/chatgpt</string>
+    <string>/Users/rileycolleyFW/dev/rileyfile/inbox/gemini</string>
+    <string>/Users/rileycolleyFW/dev/rileyfile/inbox/claude</string>
+    <string>/Users/rileycolleyFW/dev/rileyfile/inbox/codex</string>
+  </array>
+
   <key>StandardOutPath</key>
   <string>/Users/rileycolleyFW/dev/rileyfile/logs/contextsync.stdout.log</string>
 
@@ -35,6 +46,6 @@
   <string>/Users/rileycolleyFW/dev/rileyfile/logs/contextsync.stderr.log</string>
 
   <key>RunAtLoad</key>
-  <false/>
+  <true/>
 </dict>
 </plist>
