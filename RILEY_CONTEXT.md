@@ -1,7 +1,40 @@
+---
+
+## SYNC PROTOCOL v2 (ACTIVE)
+
+Canonical Source of Truth:
+- GitHub repository (rileyfied/rileyfile)
+
+Single Writer:
+- Codex (local) is the only agent allowed to modify RILEY_CONTEXT.md.
+
+Agent Roles:
+- ChatGPT, Claude, Gemini generate summaries only.
+- They do NOT modify context files directly.
+- They do NOT run compile systems.
+- They do NOT merge or push changes.
+
+Update Mechanism:
+- Only the script:
+  ./scripts/eod_append.sh <file> <SOURCE>
+  may append to RILEY_CONTEXT.md.
+- This script commits and pushes to GitHub.
+
+Deprecated Systems:
+- Inbox folder workflows
+- Compile scripts
+- CoWork merge systems
+- iCloud as canonical bus
+- Any automated context regeneration outside Codex
+
+All prior sync logic is permanently deprecated.
+
+---
+
 # RILEY_CONTEXT.md
 ## Last Updated: 2026-02-24
 
-> **Purpose**: Source of truth for Riley's projects, preferences, and active work. Read by Claude (lead architect) and all AI agents. Hosted at: https://raw.githubusercontent.com/rileyfied/rileyfile/main/RILEY_CONTEXT.md
+> **Purpose**: Context reference for Riley's projects, preferences, and active work. Read by all AI agents. Hosted at: https://raw.githubusercontent.com/rileyfied/rileyfile/main/RILEY_CONTEXT.md
 
 ---
 
@@ -47,7 +80,7 @@ Knowledge base agent for restaurant operations. All roles in one place — owner
 
 ```
 RileyFile/
-├── RILEY_CONTEXT.md        ← Canonical source of truth
+├── RILEY_CONTEXT.md        ← Canonical context file
 ├── README.md               ← Minimal workflow docs
 ├── scripts/
 │   └── eod_append.sh       ← Canonical append + commit + push workflow
@@ -59,7 +92,7 @@ RileyFile/
 ## AI TEAM
 
 **Claude** (Lead Architect) — Claude.ai + Cowork
-File ops, terminal commands, builds, context sync, system architecture. Terminal activity is Claude-initiated. Session start: reads this file.
+Planning, architecture, and summaries. Session start: reads this file.
 
 **Codex** — Terminal / local agentic tasks
 Runs automations, file operations, local scripts. Session start: reads `~/.codex/AGENTS.md` which points to this GitHub URL. `/context` or `/rf` = fetch and confirm "Context loaded ✓".
@@ -72,8 +105,6 @@ Brainstorming, daily AI briefs, scripts. 80+ saved memories. `/context` = fetche
 
 **Gemini** — Google ecosystem
 Search, research, Google integration. `/context` = fetches GitHub URL. Session start: loads context from GitHub.
-
-**Sync Protocol**: GitHub `RILEY_CONTEXT.md` is canonical. ChatGPT, Gemini, Claude, and Codex read it. Codex is the only writer/merger: it appends EOD drops under `## DAILY LOG` and pushes via `scripts/eod_append.sh`.
 
 ---
 
@@ -108,13 +139,11 @@ Minimal > Feature-rich. Speed > Perfection. Context > Structure. Cross-platform 
 - **Agent handshake files pushed to GitHub**: CHATGPT.md, GEMINI.md, SIDER.md, CONTEXT_SYNC_SETUP.md, INDEX.md, MEMORY.md, RILEY_CONTEXT_SYNC.md all committed and live on repo.
 - **Codex AGENTS.md created**: Written to `~/.codex/AGENTS.md` and `~/AGENTS.md`. Contains /context protocol, workflow rules, file routing, capture methods.
 - **Git auth resolved**: repository authentication and email privacy settings finalized; unrelated-history merge conflict resolved.
-- **Identified gap**: No auto-sync automation exists. /sync requires manual Claude session trigger. Action needed: launchd job or Codex scheduled task.
 
 ### 2026-02-15
 - **Boil Out**: Nuked OpenClaw (config, binary, credentials, completions). Removed Codex (old version). Stripped agent personality files from RileyFile. Cleaned exposed API keys from .zshrc.
 - **AI Operations Monitor spec complete**: Tracks spend on Claude.ai, Sider, ChatGPT, Gemini. iPhone widget + Mac app. Phased: Monitor → Flag → Execute.
 - **Cross-platform browser automation**: Claude Chrome extension configured with approved domains.
-- **Multi-agent context sync**: Claude can read GPT saved memories, Sider Wisebase, and update RileyFile + GitHub.
 
 ### 2026-02-14
 - YouTube content planning, desktop capture setup, RileyFile organization
@@ -128,7 +157,7 @@ Minimal > Feature-rich. Speed > Perfection. Context > Structure. Cross-platform 
 
 ---
 
-*Maintained in git. Codex appends DAILY LOG entries and pushes to GitHub.*
+*Maintained in git.*
 
 ## DAILY LOG
 
@@ -417,4 +446,11 @@ Minimal > Feature-rich. Speed > Perfection. Context > Structure. Cross-platform 
 - Completed workflow hardening test.
 - Verifying append/commit/push pipeline.
 
+## DEPRECATED SYNC LOGIC
 
+- Legacy inbox folder workflows and compile pipelines are deprecated.
+- CoWork-based merge flows are deprecated.
+- iCloud-as-canonical sync bus is deprecated.
+- Any non-Codex automated context regeneration is deprecated.
+- Manual Claude `/sync` trigger workflows are deprecated.
+- Multi-agent context merge/update flows are deprecated.
