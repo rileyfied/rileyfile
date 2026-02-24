@@ -7927,3 +7927,21 @@ bear://x-callback-url/open-note?id=
 - Size: 634880 bytes
 - Fingerprint: `634880:1771896563454984581`
 - Kind: binary_or_large
+
+## Inbox Import — 2026-02-23 20:34:29
+- Source: `inbox/codex/2026-02-23_203429_workspace_sync.md`
+
+# Workspace Sync Drop
+
+- Captured At: 2026-02-23 20:34:29 EST
+- Target Inbox: codex
+- Changed Files: 1
+
+## Changed Files
+
+### `/Users/rileycolleyFW/Library/Group Containers/9K33E3U3T4.net.shinyfrog.bear/Application Data/database.sqlite`
+- Source: Bear DB (/Users/rileycolleyFW/Library/Group Containers/9K33E3U3T4.net.shinyfrog.bear/Application Data/database.sqlite)
+- Modified: 2026-02-23 20:33:23 EST
+- Size: 634880 bytes
+- Fingerprint: `634880:1771896803596662129`
+- Kind: binary_or_large
