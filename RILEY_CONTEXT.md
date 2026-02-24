@@ -47,30 +47,11 @@ Knowledge base agent for restaurant operations. All roles in one place — owner
 
 ```
 RileyFile/
-├── RILEY_CONTEXT.md        ← This file (source of truth)
-├── README.md               ← Repo overview
-├── INDEX.md                ← Navigation guide
-├── MEMORY.md               ← Curated long-term context
-├── config.json             ← Project definitions
-├── AGENTS.md               ← Codex agent instructions (also at ~/.codex/AGENTS.md)
-├── CHATGPT.md              ← ChatGPT handshake + session start protocol
-├── GEMINI.md               ← Gemini handshake + session start protocol
-├── SIDER.md                ← Sider handshake + Wisebase info
-├── CONTEXT_SYNC_SETUP.md   ← How /context works across all agents
-├── RILEY_CONTEXT_SYNC.md   ← External-facing sync copy (for gist)
-├── RileyShare/             ← Default landing zone for all files
-│   └── captures/           ← iOS Shortcut captures, bookmarks
-├── RileyNotes/             ← Notes with #hashtags
-├── RileyProjects/          ← Active project folders
-│   ├── ARMOR APP/
-│   ├── YOUTUBE CHANNEL/
-│   ├── DASHBOARD APP/
-│   ├── CFA TRAINING/
-│   └── RILEY API/
-├── RileyAgents/            ← AI memory archives
-├── AI BRIEFS/              ← Daily audio brief production
-├── app/                    ← RileyNotes PWA
-└── scripts/                ← Automation scripts
+├── RILEY_CONTEXT.md        ← Canonical source of truth
+├── README.md               ← Minimal workflow docs
+├── scripts/
+│   └── eod_append.sh       ← Canonical append + commit + push workflow
+└── _deprecated/            ← Quarantined legacy workflows and files
 ```
 
 ---
@@ -92,9 +73,7 @@ Brainstorming, daily AI briefs, scripts. 80+ saved memories. `/context` = fetche
 **Gemini** — Google ecosystem
 Search, research, Google integration. `/context` = fetches GitHub URL. Session start: loads context from GitHub.
 
-**Sync Protocol**: Claude updates RILEY_CONTEXT.md locally, commits and pushes to GitHub. All agents reference `https://raw.githubusercontent.com/rileyfied/rileyfile/main/RILEY_CONTEXT.md` as source of truth.
-
-**GitHub**: username `rileyfied`. Login: Sign in with Apple. Token: `context-sync-claude` (active through 2026-06-09).
+**Sync Protocol**: GitHub `RILEY_CONTEXT.md` is canonical. ChatGPT, Gemini, Claude, and Codex read it. Codex is the only writer/merger: it appends EOD drops under `## DAILY LOG` and pushes via `scripts/eod_append.sh`.
 
 ---
 
@@ -128,7 +107,7 @@ Minimal > Feature-rich. Speed > Perfection. Context > Structure. Cross-platform 
 ### 2026-02-23
 - **Agent handshake files pushed to GitHub**: CHATGPT.md, GEMINI.md, SIDER.md, CONTEXT_SYNC_SETUP.md, INDEX.md, MEMORY.md, RILEY_CONTEXT_SYNC.md all committed and live on repo.
 - **Codex AGENTS.md created**: Written to `~/.codex/AGENTS.md` and `~/AGENTS.md`. Contains /context protocol, workflow rules, file routing, capture methods.
-- **Git auth resolved**: context-sync-claude token authenticated. Email privacy conflict resolved with noreply address. Merge conflict (unrelated histories) resolved keeping local versions.
+- **Git auth resolved**: repository authentication and email privacy settings finalized; unrelated-history merge conflict resolved.
 - **Identified gap**: No auto-sync automation exists. /sync requires manual Claude session trigger. Action needed: launchd job or Codex scheduled task.
 
 ### 2026-02-15
@@ -149,9 +128,9 @@ Minimal > Feature-rich. Speed > Perfection. Context > Structure. Cross-platform 
 
 ---
 
-*Maintained by Claude. Push to GitHub after each significant session.*
+*Maintained in git. Codex appends DAILY LOG entries and pushes to GitHub.*
 
-## Daily Context Sync Activity (Append-Only)
+## DAILY LOG
 
 ### 2026-02-23 02:29:01
 - No new inbox files processed.
