@@ -54,6 +54,7 @@ def build_signals(capture_rows: list[dict], changed_rows: list[tuple]) -> list[t
                     row.get("processed_path", ""),
                     row.get("note", ""),
                     " ".join(row.get("tags", []) if isinstance(row.get("tags"), list) else []),
+                    row.get("canonical_url", "") or "",
                 ]
             ).lower()
         )
@@ -85,10 +86,11 @@ def build_signals(capture_rows: list[dict], changed_rows: list[tuple]) -> list[t
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Build daily digest")
+    parser.add_argument("--rileyfile-root", default=None, help="Override RileyFile root path")
     args = parser.parse_args()
 
     try:
-        paths = resolve_paths(require_existing_root=True)
+        paths = resolve_paths(require_existing_root=True, riley_root=args.rileyfile_root)
         conn = open_db(paths.index_sqlite)
         ingest_rows = read_ingest_lines(paths.ingest_log)
 
@@ -108,6 +110,7 @@ def main() -> int:
             FROM files
             WHERE datetime(mtime, 'unixepoch') >= datetime(?)
               AND path NOT LIKE 'CONTEXT_HUB/captures/%'
+              AND path NOT LIKE 'RileyShare/captures/%'
               AND path NOT LIKE 'CONTEXT_HUB/context/_daily_digest/%'
             ORDER BY mtime DESC
             """,

@@ -9,21 +9,26 @@ import re
 import shutil
 import subprocess
 import traceback
-from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 from context_hub_common import (
+    canonicalize_url,
+    compute_fingerprint,
     db_set_state,
     file_type_for,
     infer_tags,
     now_local,
     open_db,
     parse_meta,
+    path_in_root,
     rel_to_root,
     resolve_paths,
+    sha256_bytes,
     sha256_file,
 )
+
+URL_LINE_RE = re.compile(r"^https?://\S+$", re.IGNORECASE)
 
 
 def normalize_explicit_tags(raw: Any) -> list[str]:
@@ -39,8 +44,8 @@ def normalize_explicit_tags(raw: Any) -> list[str]:
         if not tag.startswith("#"):
             tag = f"#{tag}"
         out.append(tag.lower())
-    seen = set()
     deduped: list[str] = []
+    seen = set()
     for tag in out:
         if tag in seen:
             continue
@@ -70,12 +75,22 @@ def parse_url_file(path: Path) -> str:
     return ""
 
 
+def maybe_extract_single_url_from_text(path: Path) -> str:
+    if path.suffix.lower() != ".txt":
+        return ""
+    if path.stat().st_size > 8192:
+        return ""
+    body = path.read_text(encoding="utf-8", errors="ignore")
+    lines = [ln.strip() for ln in body.splitlines() if ln.strip()]
+    if len(lines) != 1:
+        return ""
+    if URL_LINE_RE.match(lines[0]):
+        return lines[0]
+    return ""
+
+
 def extract_text(path: Path, file_type: str, out_txt: Path) -> tuple[str | None, str | None, str | None]:
     out_txt.parent.mkdir(parents=True, exist_ok=True)
-    extraction_error = None
-    extracted_content = None
-    extracted_url = None
-
     try:
         if file_type == "text":
             raw = path.read_text(encoding="utf-8", errors="ignore")
@@ -83,29 +98,27 @@ def extract_text(path: Path, file_type: str, out_txt: Path) -> tuple[str | None,
                 extracted_content = f"[RAW_HTML]\\n{raw}\\n\\n[STRIPPED_TEXT]\\n{strip_html(raw)}\\n"
             else:
                 extracted_content = raw
-        elif file_type == "url":
-            extracted_url = parse_url_file(path)
-            extracted_content = extracted_url or ""
-        elif file_type == "pdf":
+            out_txt.write_text(extracted_content, encoding="utf-8")
+            return str(out_txt), extracted_content, None
+
+        if file_type == "url":
+            url = parse_url_file(path)
+            out_txt.write_text(url, encoding="utf-8")
+            return str(out_txt), url, None
+
+        if file_type == "pdf":
             tmp = out_txt.with_suffix(".tmp.txt")
             cmd = ["pdftotext", "-layout", str(path), str(tmp)]
             subprocess.run(cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             extracted_content = tmp.read_text(encoding="utf-8", errors="ignore")
             tmp.unlink(missing_ok=True)
-        else:
-            return None, None, None
+            out_txt.write_text(extracted_content, encoding="utf-8")
+            return str(out_txt), extracted_content, None
 
-        out_txt.write_text(extracted_content or "", encoding="utf-8")
-        return rel_out_path(out_txt), extracted_content, extracted_url
+        return None, None, None
 
     except Exception as exc:
-        extraction_error = str(exc)
-        return None, None, extraction_error
-
-
-def rel_out_path(path: Path) -> str:
-    # caller can rewrite this to Riley root relative when needed
-    return str(path)
+        return None, None, str(exc)
 
 
 def choose_processed_destination(processed_dir: Path, original_name: str, sha: str) -> Path:
@@ -122,13 +135,12 @@ def choose_processed_destination(processed_dir: Path, original_name: str, sha: s
     return candidate
 
 
-def collect_artifacts(source_root: Path, first_run: bool) -> list[Path]:
+def collect_artifacts(source_root: Path) -> list[Path]:
     out: list[Path] = []
-    skip_dir_names = {"_processed", "_text"}
+    skip_dir_names = {"_processed", "_text", ".lock"}
     for dirpath, dirnames, filenames in os.walk(source_root):
         current = Path(dirpath)
-        if first_run:
-            dirnames[:] = [d for d in dirnames if d not in skip_dir_names]
+        dirnames[:] = [d for d in dirnames if d not in skip_dir_names]
         for name in filenames:
             p = current / name
             if p.name.lower().endswith(".meta.json"):
@@ -140,49 +152,104 @@ def collect_artifacts(source_root: Path, first_run: bool) -> list[Path]:
     return out
 
 
+def choose_processed_root(src: Path, roots: list[tuple[Path, Path]], default_root: Path) -> Path:
+    for capture_root, processed_root in roots:
+        if path_in_root(src, capture_root):
+            return processed_root
+    return default_root
+
+
+def canonical_sha_for(src: Path, file_type: str) -> tuple[str, str | None]:
+    if file_type == "url":
+        raw = parse_url_file(src)
+        canon = canonicalize_url(raw)
+        if canon:
+            return sha256_bytes(canon.encode("utf-8")), canon
+
+    if file_type == "text":
+        possible = maybe_extract_single_url_from_text(src)
+        canon = canonicalize_url(possible)
+        if canon:
+            return sha256_bytes(canon.encode("utf-8")), canon
+
+    return sha256_file(src), None
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Ingest capture artifacts")
-    parser.add_argument("--first-run", action="store_true", help="Ingest all files under captures root")
+    parser.add_argument("--rileyfile-root", default=None, help="Override RileyFile root path")
+    parser.add_argument("--mode", choices=["inbox", "all"], default="inbox", help="Ingest scope")
+    parser.add_argument("--first-run", action="store_true", help="Alias for --mode all")
     args = parser.parse_args()
 
+    mode = "all" if args.first_run else args.mode
+
     try:
-        paths = resolve_paths(require_existing_root=True)
+        paths = resolve_paths(require_existing_root=True, riley_root=args.rileyfile_root)
         conn = open_db(paths.index_sqlite)
 
-        scan_root = paths.captures_root if args.first_run else paths.captures_inbox
-        artifacts = collect_artifacts(scan_root, first_run=args.first_run)
-        run_id = now_local().strftime("%Y%m%d_%H%M%S")
+        existing_shas = {
+            row[0]
+            for row in conn.execute("SELECT sha FROM files WHERE sha IS NOT NULL")
+            if row and isinstance(row[0], str) and row[0]
+        }
 
-        processed_count = 0
-        skipped_count = 0
+        scan_roots = paths.capture_roots if mode == "all" else paths.inbox_roots
+        processed_map: list[tuple[Path, Path]] = list(zip(paths.capture_roots, paths.processed_roots))
+
+        artifacts: list[Path] = []
+        for root in scan_roots:
+            if root.exists():
+                artifacts.extend(collect_artifacts(root))
+        artifacts.sort(key=lambda p: p.as_posix())
+
+        run_id = now_local().strftime("%Y%m%d_%H%M%S")
+        seen_this_run: set[str] = set()
+
+        ingested = 0
+        moved_duplicates = 0
+        skipped_missing = 0
 
         for src in artifacts:
             if not src.exists() or not src.is_file():
-                skipped_count += 1
+                skipped_missing += 1
                 continue
 
             rel_src = rel_to_root(src, paths.riley_root)
-            sha = sha256_file(src)
             ftype = file_type_for(src)
+            dedupe_sha, canonical_url = canonical_sha_for(src, ftype)
+
+            target_processed_root = choose_processed_root(src, processed_map, paths.captures_processed)
+            target_processed_root.mkdir(parents=True, exist_ok=True)
 
             meta_path = src.with_name(src.name + ".meta.json")
             meta = parse_meta(meta_path)
-            explicit_tags = normalize_explicit_tags(meta.get("tags"))
+            source_meta_rel = rel_to_root(meta_path, paths.riley_root) if meta_path.exists() else None
 
-            text_out = paths.captures_text / f"{sha}.txt"
+            if dedupe_sha in existing_shas or dedupe_sha in seen_this_run:
+                # move duplicate out of inbox, but do not log/ingest again
+                dup_dest = choose_processed_destination(target_processed_root, src.name, dedupe_sha)
+                shutil.move(str(src), str(dup_dest))
+                if meta_path.exists():
+                    meta_dest = dup_dest.with_name(dup_dest.name + ".meta.json")
+                    shutil.move(str(meta_path), str(meta_dest))
+                moved_duplicates += 1
+                continue
+
+            explicit_tags = normalize_explicit_tags(meta.get("tags"))
+            text_out = paths.captures_text / f"{dedupe_sha}.txt"
+
             extracted_rel = None
             extracted_for_tags = ""
-            parsed_url = None
             extraction_error = None
 
-            extracted_rel_tmp, extracted_body, maybe_url_or_error = extract_text(src, ftype, text_out)
+            extracted_out, extracted_body, maybe_error = extract_text(src, ftype, text_out)
             if ftype in {"text", "url", "pdf"}:
-                if extracted_rel_tmp:
-                    extracted_rel = rel_to_root(text_out, paths.riley_root)
-                elif maybe_url_or_error:
-                    extraction_error = maybe_url_or_error
-            if ftype == "url" and extracted_body:
-                parsed_url = extracted_body
+                if extracted_out:
+                    extracted_rel = rel_to_root(Path(extracted_out), paths.riley_root)
+                elif maybe_error:
+                    extraction_error = maybe_error
+
             if extracted_body:
                 extracted_for_tags = extracted_body[:4000]
 
@@ -191,11 +258,10 @@ def main() -> int:
                 filename=src.name,
                 text=f"{meta.get('note', '')} {extracted_for_tags}",
                 meta_tags=explicit_tags,
-                url=parsed_url,
+                url=canonical_url,
             )
 
-            dest = choose_processed_destination(paths.captures_processed, src.name, sha)
-            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest = choose_processed_destination(target_processed_root, src.name, dedupe_sha)
             shutil.move(str(src), str(dest))
 
             moved_meta_rel = None
@@ -205,16 +271,18 @@ def main() -> int:
                 moved_meta_rel = rel_to_root(meta_dest, paths.riley_root)
 
             rel_dest = rel_to_root(dest, paths.riley_root)
-
             now_iso = now_local().isoformat()
+            st = dest.stat()
+
             conn.execute(
                 """
                 INSERT INTO files(
-                    path, sha, size, mtime, type, first_seen, last_seen,
+                    path, sha, fingerprint, size, mtime, type, first_seen, last_seen,
                     extracted_text_path, tags_json, note, source_app, captured_at, extraction_error
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(path) DO UPDATE SET
                     sha=excluded.sha,
+                    fingerprint=excluded.fingerprint,
                     size=excluded.size,
                     mtime=excluded.mtime,
                     type=excluded.type,
@@ -228,9 +296,10 @@ def main() -> int:
                 """,
                 (
                     rel_dest,
-                    sha,
-                    dest.stat().st_size,
-                    dest.stat().st_mtime,
+                    dedupe_sha,
+                    compute_fingerprint(size=st.st_size, mtime=st.st_mtime),
+                    st.st_size,
+                    st.st_mtime,
                     ftype,
                     now_iso,
                     now_iso,
@@ -248,9 +317,9 @@ def main() -> int:
                 "processed_at": now_iso,
                 "source_path": rel_src,
                 "processed_path": rel_dest,
-                "source_meta_path": rel_to_root(meta_path, paths.riley_root) if meta else None,
+                "source_meta_path": source_meta_rel,
                 "processed_meta_path": moved_meta_rel,
-                "sha": sha,
+                "sha": dedupe_sha,
                 "type": ftype,
                 "tags": tags,
                 "explicit_tags": explicit_tags,
@@ -259,21 +328,25 @@ def main() -> int:
                 "captured_at": meta.get("captured_at") if isinstance(meta.get("captured_at"), str) else "",
                 "extracted_text_path": extracted_rel,
                 "extraction_error": extraction_error,
+                "canonical_url": canonical_url,
             }
             with paths.ingest_log.open("a", encoding="utf-8") as logf:
                 logf.write(json.dumps(log_payload, ensure_ascii=False) + "\n")
 
-            processed_count += 1
+            ingested += 1
+            seen_this_run.add(dedupe_sha)
+            existing_shas.add(dedupe_sha)
 
         conn.commit()
-        if args.first_run:
+        if mode == "all":
             db_set_state(conn, "captures_first_run_complete", "1")
             conn.commit()
         conn.close()
 
-        print(f"scan_root={scan_root}")
-        print(f"ingested={processed_count}")
-        print(f"skipped={skipped_count}")
+        print(f"scan_roots={','.join(str(p) for p in scan_roots)}")
+        print(f"ingested={ingested}")
+        print(f"moved_duplicates={moved_duplicates}")
+        print(f"skipped_missing={skipped_missing}")
         print(f"ingest_log={paths.ingest_log}")
         return 0
 

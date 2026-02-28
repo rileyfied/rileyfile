@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 import getpass
 
 KNOWN_PROJECT_HASHTAGS = {
@@ -69,16 +70,22 @@ URL_EXTENSIONS = {".url", ".webloc"}
 class ResolvedPaths:
     user: str
     icloud_root: Path
+    repo_root: Path
     riley_root: Path
     context_hub: Path
     captures_root: Path
     captures_inbox: Path
     captures_processed: Path
     captures_text: Path
+    rileyshare_captures: Path | None
+    capture_roots: list[Path]
+    inbox_roots: list[Path]
+    processed_roots: list[Path]
     index_dir: Path
     context_dir: Path
     digest_dir: Path
     archive_dir: Path
+    state_json: Path
     index_sqlite: Path
     index_ndjson: Path
     ingest_log: Path
@@ -87,20 +94,26 @@ class ResolvedPaths:
     promotions_state: Path
     riley_context: Path
 
-    def as_dict(self) -> dict[str, str]:
+    def as_dict(self) -> dict[str, Any]:
         return {
             "user": self.user,
             "icloud_root": str(self.icloud_root),
+            "repo_root": str(self.repo_root),
             "riley_root": str(self.riley_root),
             "context_hub": str(self.context_hub),
             "captures_root": str(self.captures_root),
             "captures_inbox": str(self.captures_inbox),
             "captures_processed": str(self.captures_processed),
             "captures_text": str(self.captures_text),
+            "rileyshare_captures": str(self.rileyshare_captures) if self.rileyshare_captures else None,
+            "capture_roots": [str(p) for p in self.capture_roots],
+            "inbox_roots": [str(p) for p in self.inbox_roots],
+            "processed_roots": [str(p) for p in self.processed_roots],
             "index_dir": str(self.index_dir),
             "context_dir": str(self.context_dir),
             "digest_dir": str(self.digest_dir),
             "archive_dir": str(self.archive_dir),
+            "state_json": str(self.state_json),
             "index_sqlite": str(self.index_sqlite),
             "index_ndjson": str(self.index_ndjson),
             "ingest_log": str(self.ingest_log),
@@ -115,6 +128,10 @@ def now_local() -> datetime:
     return datetime.now().astimezone()
 
 
+def sha256_bytes(payload: bytes) -> str:
+    return hashlib.sha256(payload).hexdigest()
+
+
 def sha256_file(path: Path) -> str:
     h = hashlib.sha256()
     with path.open("rb") as f:
@@ -124,6 +141,10 @@ def sha256_file(path: Path) -> str:
                 break
             h.update(chunk)
     return h.hexdigest()
+
+
+def compute_fingerprint(size: int, mtime: float) -> str:
+    return f"{size}:{int(mtime * 1_000_000_000)}"
 
 
 def file_type_for(path: Path) -> str:
@@ -143,12 +164,16 @@ def file_type_for(path: Path) -> str:
     return "other"
 
 
-def ensure_parent(path: Path) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-
-
 def rel_to_root(path: Path, root: Path) -> str:
     return path.resolve().relative_to(root.resolve()).as_posix()
+
+
+def path_in_root(path: Path, root: Path) -> bool:
+    try:
+        path.resolve().relative_to(root.resolve())
+        return True
+    except ValueError:
+        return False
 
 
 def parse_meta(sidecar: Path) -> dict[str, Any]:
@@ -162,6 +187,28 @@ def parse_meta(sidecar: Path) -> dict[str, Any]:
 
 def extract_hashtags(text: str) -> set[str]:
     return {tag.lower() for tag in re.findall(r"#[A-Za-z0-9_:-]+", text)}
+
+
+def canonicalize_url(url: str) -> str:
+    raw = (url or "").strip()
+    if not raw:
+        return ""
+    try:
+        parts = urlsplit(raw)
+    except Exception:
+        return raw
+
+    scheme = (parts.scheme or "https").lower()
+    netloc = parts.netloc.lower()
+    path = parts.path or ""
+    if path.endswith("/") and path != "/":
+        path = path.rstrip("/")
+
+    query_pairs = parse_qsl(parts.query, keep_blank_values=True)
+    query_pairs.sort()
+    query = urlencode(query_pairs)
+
+    return urlunsplit((scheme, netloc, path, query, ""))
 
 
 def infer_tags(path_rel: str, filename: str, text: str, meta_tags: list[str] | None, url: str | None = None) -> list[str]:
@@ -202,30 +249,44 @@ def infer_tags(path_rel: str, filename: str, text: str, meta_tags: list[str] | N
     return sorted(tags)
 
 
-def resolve_paths(require_existing_root: bool = True) -> ResolvedPaths:
+def resolve_paths(require_existing_root: bool = True, riley_root: str | Path | None = None) -> ResolvedPaths:
     user = getpass.getuser()
+    repo_root = Path(__file__).resolve().parents[1]
     icloud_root = Path(f"/Users/{user}/Library/Mobile Documents/com~apple~CloudDocs")
-    default_riley_root = icloud_root / "RileyFile"
 
-    override = os.environ.get("RILEYFILE_ROOT", "").strip()
-    riley_root = Path(override).expanduser().resolve() if override else default_riley_root.resolve()
+    if riley_root is not None:
+        selected_root = Path(riley_root).expanduser().resolve()
+    else:
+        override = os.environ.get("RILEYFILE_ROOT", "").strip()
+        selected_root = Path(override).expanduser().resolve() if override else repo_root.resolve()
 
-    if not icloud_root.exists():
-        raise FileNotFoundError(f"iCloud root missing: {icloud_root}")
-    if require_existing_root and not riley_root.exists():
-        raise FileNotFoundError(f"RileyFile root missing: {riley_root}")
+    if require_existing_root and not selected_root.exists():
+        raise FileNotFoundError(f"RileyFile root missing: {selected_root}")
 
-    context_hub = riley_root / "CONTEXT_HUB"
+    context_hub = selected_root / "CONTEXT_HUB"
     captures_root = context_hub / "captures"
     captures_inbox = captures_root / "inbox"
     captures_processed = captures_root / "_processed"
     captures_text = captures_root / "_text"
+
+    rileyshare_captures = selected_root / "RileyShare" / "captures"
+    has_rileyshare_captures = rileyshare_captures.exists()
+
+    capture_roots: list[Path] = [captures_root]
+    inbox_roots: list[Path] = [captures_inbox]
+    processed_roots: list[Path] = [captures_processed]
+
+    if has_rileyshare_captures:
+        capture_roots.append(rileyshare_captures)
+        inbox_roots.append(rileyshare_captures / "inbox")
+        processed_roots.append(rileyshare_captures / "_processed")
 
     index_dir = context_hub / "index"
     context_dir = context_hub / "context"
     digest_dir = context_dir / "_daily_digest"
     archive_dir = context_dir / "_archive"
 
+    state_json = context_dir / ".state.json"
     index_sqlite = index_dir / "RILEY_INDEX.sqlite"
     index_ndjson = index_dir / "RILEY_INDEX.ndjson"
     ingest_log = context_dir / "_ingest_log.ndjson"
@@ -233,9 +294,9 @@ def resolve_paths(require_existing_root: bool = True) -> ResolvedPaths:
     promotions_md = context_dir / "_promotions.md"
     promotions_state = context_dir / ".promotions_state.json"
 
-    riley_context = riley_root / "RILEY_CONTEXT.md"
+    riley_context = selected_root / "RILEY_CONTEXT.md"
 
-    for p in [
+    must_create = [
         context_hub,
         captures_root,
         captures_inbox,
@@ -246,22 +307,43 @@ def resolve_paths(require_existing_root: bool = True) -> ResolvedPaths:
         digest_dir,
         archive_dir,
         context_hub / "scripts",
-    ]:
+    ]
+
+    if has_rileyshare_captures:
+        must_create.extend([
+            rileyshare_captures / "inbox",
+            rileyshare_captures / "_processed",
+        ])
+
+    for p in must_create:
         p.mkdir(parents=True, exist_ok=True)
+
+    if not ingest_log.exists():
+        ingest_log.write_text("", encoding="utf-8")
+    if not candidates_md.exists():
+        candidates_md.write_text("# Context Candidates\n\n- No new ingest entries.\n", encoding="utf-8")
+    if not promotions_md.exists():
+        promotions_md.write_text("# Context Promotions\n\n- No pending promotions.\n", encoding="utf-8")
 
     return ResolvedPaths(
         user=user,
         icloud_root=icloud_root,
-        riley_root=riley_root,
+        repo_root=repo_root,
+        riley_root=selected_root,
         context_hub=context_hub,
         captures_root=captures_root,
         captures_inbox=captures_inbox,
         captures_processed=captures_processed,
         captures_text=captures_text,
+        rileyshare_captures=rileyshare_captures if has_rileyshare_captures else None,
+        capture_roots=capture_roots,
+        inbox_roots=inbox_roots,
+        processed_roots=processed_roots,
         index_dir=index_dir,
         context_dir=context_dir,
         digest_dir=digest_dir,
         archive_dir=archive_dir,
+        state_json=state_json,
         index_sqlite=index_sqlite,
         index_ndjson=index_ndjson,
         ingest_log=ingest_log,
@@ -279,6 +361,7 @@ def open_db(index_sqlite: Path) -> sqlite3.Connection:
         CREATE TABLE IF NOT EXISTS files (
             path TEXT PRIMARY KEY,
             sha TEXT,
+            fingerprint TEXT,
             size INTEGER,
             mtime REAL,
             type TEXT,
@@ -293,6 +376,14 @@ def open_db(index_sqlite: Path) -> sqlite3.Connection:
         )
         """
     )
+
+    cols = {row[1] for row in conn.execute("PRAGMA table_info(files)").fetchall()}
+    if "fingerprint" not in cols:
+        conn.execute("ALTER TABLE files ADD COLUMN fingerprint TEXT")
+
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_files_sha ON files(sha)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_files_mtime ON files(mtime)")
+
     conn.execute(
         """
         CREATE TABLE IF NOT EXISTS state (
@@ -319,7 +410,7 @@ def db_set_state(conn: sqlite3.Connection, key: str, value: str) -> None:
 
 def list_files_for_index(root: Path) -> list[Path]:
     out: list[Path] = []
-    skip_dirs = {".git", "node_modules", "__pycache__"}
+    skip_dirs = {".git", "node_modules", "__pycache__", ".lock"}
     for dirpath, dirnames, filenames in os.walk(root):
         current = Path(dirpath)
         rel_parts = rel_to_root(current, root).split("/") if current != root else []
@@ -328,7 +419,7 @@ def list_files_for_index(root: Path) -> list[Path]:
         dirnames[:] = [d for d in dirnames if d not in skip_dirs]
         for name in filenames:
             p = current / name
-            if p.name.startswith(".") and p.suffix.lower() == ".swp":
+            if p.name.startswith(".") and p.suffix.lower() in {".swp", ".tmp"}:
                 continue
             out.append(p)
     out.sort(key=lambda p: p.as_posix())

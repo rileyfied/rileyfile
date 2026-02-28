@@ -90,10 +90,11 @@ def promotion_block(entry: dict, tag: str) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Build candidates and promotions")
+    parser.add_argument("--rileyfile-root", default=None, help="Override RileyFile root path")
     args = parser.parse_args()
 
     try:
-        paths = resolve_paths(require_existing_root=True)
+        paths = resolve_paths(require_existing_root=True, riley_root=args.rileyfile_root)
 
         entries = read_log(paths.ingest_log)
         state = load_state(paths.promotions_state)
@@ -105,7 +106,6 @@ def main() -> int:
 
         grouped: dict[str, list[dict]] = defaultdict(list)
         for entry in new_entries:
-            tags = [str(t).lower() for t in (entry.get("tags", []) if isinstance(entry.get("tags"), list) else [])]
             explicit_tags = [
                 str(t).lower()
                 for t in (entry.get("explicit_tags", []) if isinstance(entry.get("explicit_tags"), list) else [])

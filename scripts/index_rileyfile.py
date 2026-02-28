@@ -3,11 +3,12 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import traceback
-from datetime import datetime
 from pathlib import Path
 
 from context_hub_common import (
+    compute_fingerprint,
     file_type_for,
     infer_tags,
     list_files_for_index,
@@ -19,17 +20,33 @@ from context_hub_common import (
     sha256_file,
 )
 
+HASH_EXTENSIONS = {".md", ".txt", ".json", ".html", ".htm", ".pdf", ".url", ".webloc"}
+HASH_PREFIXES = ("CONTEXT_HUB/", "RileyShare/captures/")
+
 
 def sidecar_for(path: Path) -> Path:
     return path.with_name(path.name + ".meta.json")
 
 
+def should_hash(rel_path: str, ext: str) -> bool:
+    if ext in HASH_EXTENSIONS:
+        return True
+    return any(rel_path.startswith(prefix) for prefix in HASH_PREFIXES)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Index RileyFile tree into sqlite")
+    parser.add_argument("--rileyfile-root", default=None, help="Override RileyFile root path")
+    parser.add_argument(
+        "--progress-every",
+        type=int,
+        default=int(os.environ.get("INDEX_PROGRESS_EVERY", "250")),
+        help="Print progress every N files",
+    )
     args = parser.parse_args()
 
     try:
-        paths = resolve_paths(require_existing_root=True)
+        paths = resolve_paths(require_existing_root=True, riley_root=args.rileyfile_root)
         conn = open_db(paths.index_sqlite)
         conn.execute("PRAGMA journal_mode=WAL;")
         conn.execute("PRAGMA synchronous=NORMAL;")
@@ -38,39 +55,52 @@ def main() -> int:
         existing_rows = {
             row[0]: {
                 "sha": row[1],
-                "size": row[2],
-                "mtime": row[3],
-                "first_seen": row[4],
-                "extracted_text_path": row[5],
+                "fingerprint": row[2],
+                "size": row[3],
+                "mtime": row[4],
+                "first_seen": row[5],
+                "extracted_text_path": row[6],
             }
             for row in conn.execute(
-                "SELECT path, sha, size, mtime, first_seen, extracted_text_path FROM files"
+                "SELECT path, sha, fingerprint, size, mtime, first_seen, extracted_text_path FROM files"
             )
         }
 
+        files = list_files_for_index(paths.riley_root)
+        total = len(files)
+
         indexed = 0
-        rehashed = 0
-        reused_sha = 0
+        hashed = 0
+        fingerprint_only = 0
+        reused = 0
         now_iso = now_local().isoformat()
 
-        for abs_path in list_files_for_index(paths.riley_root):
+        for i, abs_path in enumerate(files, start=1):
             rel_path = rel_to_root(abs_path, paths.riley_root)
             if rel_path.startswith("CONTEXT_HUB/captures/_text/"):
-                # avoid polluting signal extraction with generated text artifacts
                 continue
 
             st = abs_path.stat()
             size = st.st_size
             mtime = st.st_mtime
+            fingerprint = compute_fingerprint(size=size, mtime=mtime)
             meta = parse_meta(sidecar_for(abs_path))
             existing = existing_rows.get(rel_path)
 
-            if existing and existing.get("size") == size and float(existing.get("mtime") or 0.0) == float(mtime):
-                sha = existing.get("sha") or ""
-                reused_sha += 1
+            unchanged = bool(existing and existing.get("fingerprint") == fingerprint)
+            ext = abs_path.suffix.lower()
+            do_hash = should_hash(rel_path, ext)
+
+            if unchanged:
+                sha = existing.get("sha")
+                reused += 1
             else:
-                sha = sha256_file(abs_path)
-                rehashed += 1
+                if do_hash:
+                    sha = sha256_file(abs_path)
+                    hashed += 1
+                else:
+                    sha = None
+                    fingerprint_only += 1
 
             filename = abs_path.name
             tags = infer_tags(
@@ -86,11 +116,12 @@ def main() -> int:
             conn.execute(
                 """
                 INSERT INTO files(
-                    path, sha, size, mtime, type, first_seen, last_seen,
+                    path, sha, fingerprint, size, mtime, type, first_seen, last_seen,
                     extracted_text_path, tags_json, note, source_app, captured_at, extraction_error
-                ) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(path) DO UPDATE SET
                     sha=excluded.sha,
+                    fingerprint=excluded.fingerprint,
                     size=excluded.size,
                     mtime=excluded.mtime,
                     type=excluded.type,
@@ -105,6 +136,7 @@ def main() -> int:
                 (
                     rel_path,
                     sha,
+                    fingerprint,
                     size,
                     mtime,
                     file_type_for(abs_path),
@@ -120,12 +152,17 @@ def main() -> int:
             )
             indexed += 1
 
+            if args.progress_every > 0 and i % args.progress_every == 0:
+                print(f"progress={i}/{total} current={rel_path}")
+
         conn.commit()
         conn.close()
 
+        print(f"scan_roots={paths.riley_root}")
         print(f"indexed_files={indexed}")
-        print(f"rehashed_files={rehashed}")
-        print(f"reused_sha_files={reused_sha}")
+        print(f"hashed_files={hashed}")
+        print(f"fingerprint_only_files={fingerprint_only}")
+        print(f"reused_entries={reused}")
         print(f"index_path={paths.index_sqlite}")
         return 0
 

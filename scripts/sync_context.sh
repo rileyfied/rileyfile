@@ -12,7 +12,6 @@ acquire_lock() {
     return 0
   fi
 
-  # lock exists: check staleness
   if [[ -f "$LOCK_DIR/started_epoch" ]]; then
     local started now age
     started="$(cat "$LOCK_DIR/started_epoch" 2>/dev/null || echo 0)"
@@ -63,43 +62,77 @@ if ! command -v pdftotext >/dev/null 2>&1; then
   exit 1
 fi
 
-PATH_JSON="$(python3 "$SCRIPT_DIR/resolve_paths.py" --json)"
-RILEY_ROOT="$(printf '%s' "$PATH_JSON" | python3 -c 'import json,sys; print(json.load(sys.stdin)["riley_root"])')"
-INDEX_SQLITE="$(printf '%s' "$PATH_JSON" | python3 -c 'import json,sys; print(json.load(sys.stdin)["index_sqlite"])')"
+RESOLVE_ARGS=()
+if [[ -n "${RILEYFILE_ROOT:-}" ]]; then
+  RESOLVE_ARGS+=(--rileyfile-root "$RILEYFILE_ROOT")
+fi
 
-FIRST_RUN=0
-if [[ ! -f "$INDEX_SQLITE" ]]; then
-  FIRST_RUN=1
-else
-  FIRST_RUN_FLAG="$(python3 - <<PY
-import sqlite3
-db = r"""$INDEX_SQLITE"""
-try:
-    conn = sqlite3.connect(db)
-    cur = conn.execute("SELECT value FROM state WHERE key='captures_first_run_complete'")
-    row = cur.fetchone()
-    conn.close()
-    print("1" if row and str(row[0]) == "1" else "0")
-except Exception:
-    print("0")
+PATH_JSON="$(python3 "$SCRIPT_DIR/resolve_paths.py" --json "${RESOLVE_ARGS[@]}")"
+RILEY_ROOT="$(printf '%s' "$PATH_JSON" | python3 -c 'import json,sys; print(json.load(sys.stdin)["riley_root"])')"
+STATE_JSON="$(printf '%s' "$PATH_JSON" | python3 -c 'import json,sys; print(json.load(sys.stdin)["state_json"])')"
+CAPTURE_ROOTS_CSV="$(printf '%s' "$PATH_JSON" | python3 -c 'import json,sys; d=json.load(sys.stdin); print(",".join(d.get("capture_roots", [])))')"
+INBOX_ROOTS_CSV="$(printf '%s' "$PATH_JSON" | python3 -c 'import json,sys; d=json.load(sys.stdin); print(",".join(d.get("inbox_roots", [])))')"
+
+FULL_INGEST_COMPLETED="$(python3 - <<PY
+import json, pathlib
+p = pathlib.Path(r'''$STATE_JSON''')
+if not p.exists():
+    print('0')
+else:
+    try:
+        data = json.loads(p.read_text(encoding='utf-8'))
+        print('1' if data.get('full_ingest_completed') is True else '0')
+    except Exception:
+        print('0')
 PY
 )"
-  if [[ "$FIRST_RUN_FLAG" != "1" ]]; then
-    FIRST_RUN=1
+
+write_state() {
+  python3 - <<PY
+import json, pathlib, datetime
+p = pathlib.Path(r'''$STATE_JSON''')
+p.parent.mkdir(parents=True, exist_ok=True)
+data = {
+  "full_ingest_completed": True,
+  "completed_at": datetime.datetime.now().astimezone().isoformat(),
+  "index_version": 3,
+}
+p.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+PY
+}
+
+COMMON_ARGS=(--rileyfile-root "$RILEY_ROOT")
+
+if [[ "$FULL_INGEST_COMPLETED" != "1" ]]; then
+  echo "run_mode=full_baseline"
+  echo "scan_roots=$CAPTURE_ROOTS_CSV"
+
+  python3 "$SCRIPT_DIR/index_rileyfile.py" "${COMMON_ARGS[@]}"
+  python3 "$SCRIPT_DIR/ingest_captures.py" "${COMMON_ARGS[@]}" --mode all
+  python3 "$SCRIPT_DIR/build_digest.py" "${COMMON_ARGS[@]}"
+  python3 "$SCRIPT_DIR/build_promotions.py" "${COMMON_ARGS[@]}"
+  python3 "$SCRIPT_DIR/merge_promotions.py" "${COMMON_ARGS[@]}"
+  write_state
+else
+  if [[ "${SYNC_CONTEXT_FAST:-0}" == "1" ]]; then
+    echo "run_mode=fast_inbox"
+    echo "scan_roots=$INBOX_ROOTS_CSV"
+
+    python3 "$SCRIPT_DIR/ingest_captures.py" "${COMMON_ARGS[@]}" --mode inbox
+    python3 "$SCRIPT_DIR/build_digest.py" "${COMMON_ARGS[@]}"
+    python3 "$SCRIPT_DIR/build_promotions.py" "${COMMON_ARGS[@]}"
+    python3 "$SCRIPT_DIR/merge_promotions.py" "${COMMON_ARGS[@]}"
+  else
+    echo "run_mode=incremental"
+    echo "scan_roots=$INBOX_ROOTS_CSV"
+
+    python3 "$SCRIPT_DIR/index_rileyfile.py" "${COMMON_ARGS[@]}"
+    python3 "$SCRIPT_DIR/ingest_captures.py" "${COMMON_ARGS[@]}" --mode inbox
+    python3 "$SCRIPT_DIR/build_digest.py" "${COMMON_ARGS[@]}"
+    python3 "$SCRIPT_DIR/build_promotions.py" "${COMMON_ARGS[@]}"
+    python3 "$SCRIPT_DIR/merge_promotions.py" "${COMMON_ARGS[@]}"
   fi
 fi
-
-python3 "$SCRIPT_DIR/index_rileyfile.py"
-
-if [[ "$FIRST_RUN" == "1" ]]; then
-  python3 "$SCRIPT_DIR/ingest_captures.py" --first-run
-else
-  python3 "$SCRIPT_DIR/ingest_captures.py"
-fi
-
-python3 "$SCRIPT_DIR/build_digest.py"
-python3 "$SCRIPT_DIR/build_promotions.py"
-python3 "$SCRIPT_DIR/merge_promotions.py"
 
 if [[ "${SYNC_CONTEXT_SKIP_GIT:-0}" == "1" ]]; then
   echo "Skipping git commit/push (SYNC_CONTEXT_SKIP_GIT=1)"
