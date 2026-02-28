@@ -1,3 +1,6 @@
 logs/*.log
 scripts/.last_run.json
 scripts/.workspace_sync_state.json
+.DS_Store
+__pycache__/
+CONTEXT_HUB/.lock/

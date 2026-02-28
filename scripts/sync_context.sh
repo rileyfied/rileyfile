@@ -147,6 +147,8 @@ fi
 cd "$RILEY_ROOT"
 
 git add RILEY_CONTEXT.md CONTEXT_HUB
+# Exclude runtime lock files and macOS metadata from sync commits.
+git reset -q -- CONTEXT_HUB/.lock CONTEXT_HUB/.lock/* CONTEXT_HUB/.DS_Store CONTEXT_HUB/captures/.DS_Store || true
 if git diff --cached --quiet -- RILEY_CONTEXT.md CONTEXT_HUB; then
   echo "No git changes to commit"
   exit 0
