@@ -15,10 +15,14 @@ Agent Roles:
 - They do NOT merge or push changes.
 
 Update Mechanism:
-- Only the script:
-  ./scripts/eod_append.sh <file> <SOURCE>
-  may append to RILEY_CONTEXT.md.
-- This script commits and pushes to GitHub.
+- Codex-controlled write paths only:
+  - `./scripts/eod_append.sh <file> <SOURCE>` for manual daily log appends.
+  - `./scripts/sync_context.sh` for ingest/promotions merge runs.
+- Automated scheduling is active via launchd:
+  - `com.rileyfile.sync_context` runs hourly (`StartInterval=3600`) and pushes updates.
+- Runtime state is local-only (`~/.rileyfile/runtime` by default):
+  - `RILEY_INDEX.sqlite`, `.state.json`, `.promotions_state.json`, and lock artifacts.
+- Canonical context content remains in the GitHub repo root and `CONTEXT_HUB/context/`.
 
 Deprecated Systems:
 - Inbox folder workflows
@@ -32,9 +36,27 @@ All prior sync logic is permanently deprecated.
 ---
 
 # RILEY_CONTEXT.md
-## Last Updated: 2026-02-24
+## Last Updated: 2026-03-02
 
 > **Purpose**: Context reference for Riley's projects, preferences, and active work. Read by all AI agents. Hosted at: https://raw.githubusercontent.com/rileyfied/rileyfile/main/RILEY_CONTEXT.md
+
+---
+
+## CONTEXT HUB STATUS (2026-03-02)
+
+- Context Hub v3 hardening is complete and active.
+- Runtime/content split is live:
+  - Runtime state uses local path (`~/.rileyfile/runtime` default, overridable by `RILEYFILE_RUNTIME_ROOT`).
+  - Canonical outputs remain in repo/iCloud (`RILEY_CONTEXT.md`, ingest logs, digests, candidates, promotions).
+- Launchd scheduling is active:
+  - `com.rileyfile.sync_context` runs hourly and executes index -> ingest -> digest -> promotions -> merge -> commit -> push.
+- Break-glass and rollback runbooks exist in:
+  - `CONTEXT_HUB/context/README_ingest.md`.
+- Known edge risks resolved:
+  - iCloud sqlite corruption risk.
+  - iCloud state/lock drift risk.
+  - lock artifact cloud conflicts.
+  - missing recovery path documentation.
 
 ---
 
@@ -480,5 +502,4 @@ CONTENT CAPTURES:
 HANDOFF TO CLAUDE:
 - None
 ---
-
 
