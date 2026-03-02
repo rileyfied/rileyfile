@@ -120,3 +120,5 @@ rm -f "$HOME/.rileyfile/runtime/context/.state.json"
 rm -f "$HOME/.rileyfile/runtime/context/.promotions_state.json"
 RILEYFILE_ROOT="<RILEYFILE_ROOT>" RILEYFILE_RUNTIME_ROOT="$HOME/.rileyfile/runtime" SYNC_CONTEXT_SKIP_GIT=1 ./scripts/sync_context.sh
 ```
+
+If shell safety policy blocks `rm -f` in your environment, delete the same runtime files using the platform-approved file edit/delete path, then run the sync command above.
