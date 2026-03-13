@@ -102,6 +102,13 @@ def main() -> int:
         merged_text, merged_count = merge_into_context(context_text, blocks)
 
         if merged_count > 0:
+            today = datetime.now().strftime("%Y-%m-%d")
+            merged_text = re.sub(
+                r"## Last Updated: \d{4}-\d{2}-\d{2}",
+                f"## Last Updated: {today}",
+                merged_text,
+                count=1,
+            )
             paths.riley_context.write_text(merged_text, encoding="utf-8")
             stamp = datetime.now().strftime("%Y%m%d_%H%M")
             archive_path = paths.archive_dir / f"promotions_{stamp}.md"

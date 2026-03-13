@@ -91,6 +91,25 @@ def read_content_snippet(riley_root, processed_path: str, max_chars: int = 500) 
         return None
 
 
+def is_bare_url(riley_root, processed_path: str) -> bool:
+    """Returns True if the file contains only a URL and no real context."""
+    try:
+        full_path = Path(riley_root) / processed_path
+        if not full_path.exists():
+            return False
+        raw = full_path.read_text(encoding="utf-8", errors="ignore").strip()
+        lines = [l.strip() for l in raw.splitlines() if l.strip()]
+        # Skip hashtag-only first line
+        if lines and all(tok.startswith("#") for tok in lines[0].split()):
+            lines = lines[1:]
+        if not lines:
+            return True
+        # Bare URL = single line starting with http
+        return len(lines) == 1 and lines[0].startswith("http")
+    except Exception:
+        return False
+
+
 def promotion_block(entry: dict, tag: str, riley_root=None) -> str:
     path = entry.get("processed_path", "")
     tags = entry.get("tags", []) if isinstance(entry.get("tags"), list) else []
@@ -146,6 +165,10 @@ def main() -> int:
             )
             in_to_context = is_forced_context(entry)
             if tag or in_to_context:
+                # Skip bare-URL-only captures — no real context value
+                proc_path = entry.get("processed_path", "")
+                if is_bare_url(paths.riley_root, proc_path):
+                    continue
                 grouped[tag or "#general"].append(entry)
 
         promotion_lines = ["# Context Promotions", ""]
