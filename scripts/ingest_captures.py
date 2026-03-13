@@ -197,7 +197,7 @@ def main() -> int:
 
         existing_shas = {
             row[0]
-            for row in conn.execute("SELECT sha FROM files WHERE sha IS NOT NULL")
+            for row in conn.execute("SELECT sha FROM files WHERE sha IS NOT NULL AND path LIKE '%_processed%'")
             if row and isinstance(row[0], str) and row[0]
         }
 
