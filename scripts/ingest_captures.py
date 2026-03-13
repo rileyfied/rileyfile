@@ -258,6 +258,14 @@ def main() -> int:
             if extracted_body:
                 extracted_for_tags = extracted_body[:4000]
 
+            # If no explicit tags from meta, check if first line is hashtag-only
+            # (RileyNotes convention: "#tag1 #tag2" on line 1, content below)
+            if not explicit_tags and ftype == "text" and extracted_body:
+                first_line = extracted_body.split("\n")[0].strip()
+                tokens = first_line.split()
+                if tokens and all(tok.startswith("#") for tok in tokens):
+                    explicit_tags = [tok.lower() for tok in tokens]
+
             tags = infer_tags(
                 path_rel=rel_src,
                 filename=src.name,
