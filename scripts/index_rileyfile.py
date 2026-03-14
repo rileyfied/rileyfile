@@ -101,8 +101,15 @@ def main() -> int:
                 reused += 1
             else:
                 if do_hash:
-                    sha = sha256_file(abs_path)
-                    hashed += 1
+                    try:
+                        sha = sha256_file(abs_path)
+                        hashed += 1
+                    except OSError as e:
+                        if e.errno == 11:  # EDEADLK — iCloud file not locally available
+                            sha = None
+                            fingerprint_only += 1
+                        else:
+                            raise
                 else:
                     sha = None
                     fingerprint_only += 1
